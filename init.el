@@ -16,6 +16,7 @@
   '(starter-kit
     starter-kit-lisp
     starter-kit-bindings
+    auto-complete
     ac-nrepl
     clojure-mode
     nrepl
@@ -43,11 +44,20 @@
  
 ;; Repl mode hook
 (add-hook 'nrepl-mode-hook 'subword-mode)
- 
+
+ ;; auto-complete
+      (require 'auto-complete-config)
+      (add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
+      (ac-config-default)
+
 ;; Auto completion for NREPL
 (require 'ac-nrepl)
+ (add-hook 'nrepl-mode-hook 'ac-nrepl-setup)
+ (add-hook 'nrepl-interaction-mode-hook 'ac-nrepl-setup)
 (eval-after-load "auto-complete"
 '(add-to-list 'ac-modes 'nrepl-mode))
 (add-hook 'nrepl-mode-hook 'ac-nrepl-setup)
 
 (require 'rainbow-delimiters)
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
