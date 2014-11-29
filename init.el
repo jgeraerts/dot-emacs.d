@@ -2,7 +2,7 @@
 (require 'package)
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa-stable.milkbox.net/packages/"))
 (package-initialize)
 
 (load-theme 'zenburn t)
@@ -17,10 +17,9 @@
     starter-kit-lisp
     starter-kit-bindings
     auto-complete
-    ac-nrepl
+    ac-cider
     cider
     clojure-mode
-    clojure-test-mode
     rainbow-delimiters
     graphviz-dot-mode
     midje-mode
@@ -42,24 +41,16 @@
 
 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 (add-hook 'clojure-mode-hook 'paredit-mode)
-;; Repl mode hook
 (add-hook 'nrepl-mode-hook 'subword-mode)
-
-;; auto-complete
-      ;; (require 'auto-complete-config)
-      ;; (add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
-      ;; (ac-config-default)
-
-;; Auto completion for NREPL
-;; (require 'ac-nrepl)
-;;  (add-hook 'nrepl-mode-hook 'ac-nrepl-setup)
-;;  (add-hook 'nrepl-interaction-mode-hook 'ac-nrepl-setup)
-;; (eval-after-load "auto-complete"
-;; '(add-to-list 'ac-modes 'nrepl-mode))
-;; (add-hook 'nrepl-mode-hook 'ac-nrepl-setup)
-
 
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
+(require 'ac-cider)
+(add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+(add-hook 'cider-mode-hook 'ac-cider-setup)
+(add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+(eval-after-load "auto-complete"
+  '(add-to-list 'ac-modes 'cider-mode))
 
 (setq TeX-engine 'xetex)
