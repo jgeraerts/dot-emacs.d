@@ -16,19 +16,22 @@
   '(starter-kit
     starter-kit-lisp
     starter-kit-bindings
-    auto-complete
-    ac-cider
+    company
     cider
     clojure-mode
     rainbow-delimiters
     graphviz-dot-mode
     midje-mode
-    magit)
+    magit
+    slamhound
+    projectile)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
+
+(projectile-global-mode)
 
 (require 'cider)
  
@@ -36,6 +39,8 @@
 (setq nrepl-hide-special-buffers t)
 (setq cider-repl-popup-stacktraces-in-repl t)
 (setq cider-repl-history-file "~/.emacs.d/nrepl-history")
+(setq nrepl-log-messages t)
+
  
 ;; Some default eldoc facilities
 
@@ -43,14 +48,23 @@
 (add-hook 'clojure-mode-hook 'paredit-mode)
 (add-hook 'nrepl-mode-hook 'subword-mode)
 
+;; company mode
+
+(add-hook 'cider-repl-mode-hook 'company-mode)
+(add-hook 'cider-mode-hook 'company-mode)
+
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
-(require 'ac-cider)
-(add-hook 'cider-mode-hook 'ac-flyspell-workaround)
-(add-hook 'cider-mode-hook 'ac-cider-setup)
-(add-hook 'cider-repl-mode-hook 'ac-cider-setup)
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'cider-mode))
-
 (setq TeX-engine 'xetex)
+
+(defun cider-namespace-refresh ()
+  (interactive)
+  (cider-interactive-eval
+   "(require 'clojure.tools.namespace.repl)
+    (clojure.tools.namespace.repl/refresh)"))
+
+(define-key clojure-mode-map (kbd "C-c M-y") 'cider-namespace-refresh)
+
+;(require 'sr-speedbar)
+
