@@ -5,7 +5,7 @@
 (add-to-list 'package-archives '("melpa" . "http://melpa-stable.milkbox.net/packages/"))
 (package-initialize)
 
-(load-theme 'zenburn t)
+
 
 
 (when (not package-archive-contents)
@@ -13,9 +13,9 @@
 
 ;; Add in your own as you wish:
 (defvar my-packages
-  '(starter-kit
-    starter-kit-lisp
-    starter-kit-bindings
+  '(;starter-kit
+    ;starter-kit-lisp
+    ;starter-kit-bindings
     company
     cider
     clojure-mode
@@ -24,12 +24,15 @@
     ;midje-mode
     magit
     slamhound
-    projectile)
+    projectile
+    zenburn)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
+
+(load-theme 'zenburn t)
 
 (projectile-global-mode)
 
