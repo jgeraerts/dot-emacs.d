@@ -21,7 +21,7 @@
     clojure-mode
     rainbow-delimiters
     graphviz-dot-mode
-    midje-mode
+    ;midje-mode
     magit
     slamhound
     projectile)
@@ -33,11 +33,16 @@
 
 (projectile-global-mode)
 
+(global-linum-mode t)               ; Always show line numbers on left
+(setq linum-format "%4d ") ; Line numbers gutter should be four characters wide
+
+
 (require 'cider)
  
 ;; Configure nrepl.el
-(setq nrepl-hide-special-buffers t)
+;(setq nrepl-hide-special-buffers t)
 (setq cider-repl-popup-stacktraces-in-repl t)
+(setq nrepl-popup-on-error nil) ; Don't popup new buffer for errors (show in nrepl buffer)
 (setq cider-repl-history-file "~/.emacs.d/nrepl-history")
 (setq nrepl-log-messages t)
 
@@ -66,5 +71,8 @@
 
 (define-key clojure-mode-map (kbd "C-c M-y") 'cider-namespace-refresh)
 
-;(require 'sr-speedbar)
 
+; prevent creating lockfiles so that directory timestamps are not
+; updated. This triggers lein-test-refresh to do a test run before
+; editing a file
+(setq create-lockfiles nil)
