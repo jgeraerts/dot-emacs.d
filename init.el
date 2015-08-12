@@ -25,7 +25,7 @@
     magit
     slamhound
     projectile
-    zenburn)
+    zenburn-theme)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
