@@ -6,11 +6,9 @@
 (require 'package)
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa-stable.milkbox.net/packages/"))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa-stable.milkbox.net/packages/"))
 (package-initialize)
-
-
-
 
 (when (not package-archive-contents)
   (package-refresh-contents))
@@ -77,7 +75,6 @@
     (clojure.tools.namespace.repl/refresh)"))
 
 (define-key clojure-mode-map (kbd "C-c M-y") 'cider-namespace-refresh)
-
 
 ; prevent creating lockfiles so that directory timestamps are not
 ; updated. This triggers lein-test-refresh to do a test run before
