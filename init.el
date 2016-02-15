@@ -52,6 +52,7 @@
 (projectile-global-mode)
 (global-linum-mode t)               ; Always show line numbers on left
 (setq linum-format "%4d ") ; Line numbers gutter should be four characters wide
+(setq inhibit-startup-message t)
 (set-default-coding-systems 'utf-8-unix)
 (set-terminal-coding-system 'utf-8-unix)
 (set-keyboard-coding-system 'utf-8-unix)
