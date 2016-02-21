@@ -36,7 +36,10 @@
     smart-mode-line
     discover
     discover-my-major
-    which-key)
+    which-key
+    markdown-mode
+    flycheck
+    company-jedi)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -63,6 +66,7 @@
          (not (eq major-mode 'dired-mode)))
         (fci-mode 1))))
 
+(global-hl-line-mode 1) ; highlight line
 (ido-mode 1)
 (ido-everywhere 1)
 (ido-ubiquitous-mode 1)
@@ -79,6 +83,8 @@
 (show-paren-mode)
 (which-key-mode)
 (fset 'yes-or-no-p 'y-or-n-p)  ;; only type `y` instead of `yes`
+
+(add-to-list 'company-backends 'company-jedi)
 
 ;; Configure nrepl.el
 ;(setq nrepl-hide-special-buffers t)
@@ -113,6 +119,7 @@
 (setq-default show-trailing-whitespace t)
 (setq-default indicate-empty-lines t)
 
+(add-hook 'after-init-hook #'global-flycheck-mode)
 ;; Some default eldoc facilities
 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 (add-hook 'clojure-mode-hook 'paredit-mode)
@@ -133,3 +140,6 @@
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
 (define-key clojure-mode-map (kbd "C-c M-y") 'cider-namespace-refresh)
+
+(provide 'init)
+
