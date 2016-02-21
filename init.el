@@ -23,6 +23,7 @@
     company
     cider
     clojure-mode
+    clojure-mode-extra-font-locking
     rainbow-delimiters
     graphviz-dot-mode
     magit
