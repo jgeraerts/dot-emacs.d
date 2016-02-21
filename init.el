@@ -80,7 +80,8 @@
 ;; flx-ido looks better with ido-vertical-mode
 (require 'ido-vertical-mode)
 (ido-vertical-mode)
-
+; up-down works better in vertical mode
+(setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right) 
 (load-theme 'zenburn t)
 (prefer-coding-system 'utf-8-unix)
 (projectile-global-mode)
