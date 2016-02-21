@@ -17,6 +17,8 @@
     paredit
     idle-highlight-mode
     ido-ubiquitous
+    flx-ido
+    ido-vertical-mode
     find-file-in-project
     smex
     ;scpaste
@@ -70,6 +72,15 @@
 (ido-mode 1)
 (ido-everywhere 1)
 (ido-ubiquitous-mode 1)
+(require 'flx-ido)
+(flx-ido-mode 1)
+;; disable ido faces to see flx highlights.
+(setq ido-use-faces nil)
+
+;; flx-ido looks better with ido-vertical-mode
+(require 'ido-vertical-mode)
+(ido-vertical-mode)
+
 (load-theme 'zenburn t)
 (prefer-coding-system 'utf-8-unix)
 (projectile-global-mode)
