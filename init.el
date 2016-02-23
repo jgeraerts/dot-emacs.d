@@ -1,3 +1,7 @@
+;;; init --- Emacs Initialization File
+;;; Commentary:
+;;;    make flycheck happy
+
 (require 'package)
 
 (add-to-list 'package-archives
@@ -26,6 +30,7 @@
     cider
     clojure-mode
     clojure-mode-extra-font-locking
+    clj-refactor
     rainbow-delimiters
     graphviz-dot-mode
     magit
@@ -53,6 +58,8 @@
 (require 'rainbow-delimiters)
 (require 'cider)
 (require 'which-key)
+(require 'flx-ido)
+(require 'company)
 
 (defun cider-namespace-refresh ()
   (interactive)
@@ -72,7 +79,7 @@
 (ido-mode 1)
 (ido-everywhere 1)
 (ido-ubiquitous-mode 1)
-(require 'flx-ido)
+
 (flx-ido-mode 1)
 ;; disable ido faces to see flx highlights.
 (setq ido-use-faces nil)
@@ -130,6 +137,33 @@
 (setq column-number-mode t)
 (setq-default show-trailing-whitespace t)
 (setq-default indicate-empty-lines t)
+
+(setq cljr-magic-require-namespaces
+      '(("io"   . "clojure.java.io")
+        ("set"  . "clojure.set")
+        ("str"  . "clojure.string")
+        ("walk" . "clojure.walk")
+        ("zip"  . "clojure.zip")
+        ("time" . "clj-time.core")
+        ("log"  . "clojure.tools.logging")
+        ("json" . "cheshire.core")
+        ("jdbc" . "clojure.java.jdbc")
+        ("comp" . "com.stuartsierra.component")))
+    
+
+(defun my-clojure-mode-hook ()
+    (clj-refactor-mode 1)
+    (yas-minor-mode 1) ; for adding require/use/import statements
+    ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+    (cljr-add-keybindings-with-prefix "C-c C-m"))
+
+(add-hook 'clojure-mode-hook #'my-clojure-mode-hook)(defun my-clojure-mode-hook ()
+    (clj-refactor-mode 1)
+    (yas-minor-mode 1) ; for adding require/use/import statements
+    ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+    (cljr-add-keybindings-with-prefix "C-c C-m"))
+
+(add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
 
 (add-hook 'after-init-hook #'global-flycheck-mode)
 ;; Some default eldoc facilities
