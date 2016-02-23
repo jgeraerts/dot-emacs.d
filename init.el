@@ -23,6 +23,11 @@
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path site-lisp-dir)
 
+;; Add external projects to load path
+(dolist (project (directory-files site-lisp-dir t "\\w+"))
+  (when (file-directory-p project)    (add-to-list 'load-path project)))
+
+
 (require 'setup-package)
 
 (defun init--install-packages ()
@@ -56,13 +61,18 @@
       which-key
       markdown-mode
       flycheck
-      company-jedi)))
+      company-jedi
+      smooth-scrolling
+      undo-tree
+      dash)))
 
 (condition-case nil
     (init--install-packages)
   (error
    (package-refresh-contents)
    (init--install-packages)))
+
+(require 'sane-defaults)
 
 (require 'powerline)
 (require 'fill-column-indicator) ;; line indicating some edge column
@@ -104,15 +114,11 @@
 (prefer-coding-system 'utf-8-unix)
 (projectile-global-mode)
 (global-linum-mode t)               ; Always show line numbers on left
-(set-default-coding-systems 'utf-8-unix)
-(set-terminal-coding-system 'utf-8-unix)
-(set-keyboard-coding-system 'utf-8-unix)
-(windmove-default-keybindings) ;; Shift+direction
 (global-fci-mode 1)
 (powerline-default-theme)
 (show-paren-mode)
 (which-key-mode)
-(fset 'yes-or-no-p 'y-or-n-p)  ;; only type `y` instead of `yes`
+
 
 (add-to-list 'company-backends 'company-jedi)
 
@@ -122,15 +128,7 @@
 (setq nrepl-popup-on-error nil) ; Don't popup new buffer for errors (show in nrepl buffer)
 (setq cider-repl-history-file "~/.emacs.d/nrepl-history")
 (setq nrepl-log-messages t)
-; prevent creating lockfiles so that directory timestamps are not
-; updated. This triggers lein-test-refresh to do a test run before
-; editing a file
-(setq create-lockfiles nil)
-(setq make-backup-files nil)
-(setq tab-width 2
-      indent-tabs-mode nil)
-(setq fill-column 80) ;; M-q should fill at 80 chars, not 75
-(setq-default indent-tabs-mode nil)      ;; no tabs!
+
 (setq TeX-engine 'xetex)
 (setq ido-enable-prefix nil
       ido-enable-flex-matching t
