@@ -2,56 +2,67 @@
 ;;; Commentary:
 ;;;    make flycheck happy
 
-(require 'package)
+;;; Code:
+;; Turn off mouse interface early in startup to avoid momentary display
 
-(add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-;(add-to-list 'package-archives
-;           '("marmalade" . "http://marmalade-repo.org/packages/") t)
-;(add-to-list 'package-archives
-;             '("melpa" . "http://melpa-stable.milkbox.net/packages/"))
-(package-initialize)
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-(when (not package-archive-contents)
-  (package-refresh-contents))
+;; No splash screen please ... jeez
+(setq inhibit-startup-message t)
 
-;; Add in your own as you wish:
-(defvar my-packages
-  '(better-defaults
-    paredit
-    idle-highlight-mode
-    ido-ubiquitous
-    flx-ido
-    ido-vertical-mode
-    find-file-in-project
-    smex
-    ;scpaste
-    company
-    cider
-    clojure-mode
-    clojure-mode-extra-font-locking
-    clj-refactor
-    rainbow-delimiters
-    graphviz-dot-mode
-    magit
-    slamhound
-    projectile
-    zenburn-theme
-    fill-column-indicator
-    expand-region
-    powerline
-    smart-mode-line
-    discover
-    discover-my-major
-    which-key
-    markdown-mode
-    flycheck
-    company-jedi)
-  "A list of packages to ensure are installed at launch.")
+;; Set path to dependencies
+(setq site-lisp-dir
+      (expand-file-name "site-lisp" user-emacs-directory))
 
-(dolist (p my-packages)
-  (when (not (package-installed-p p))
-    (package-install p)))
+(setq settings-dir
+      (expand-file-name "settings" user-emacs-directory))
+
+;; Set up load path
+(add-to-list 'load-path settings-dir)
+(add-to-list 'load-path site-lisp-dir)
+
+(require 'setup-package)
+
+(defun init--install-packages ()
+  (packages-install
+    '(better-defaults
+      paredit
+      idle-highlight-mode
+      ido-ubiquitous
+      flx-ido
+      ido-vertical-mode
+      find-file-in-project
+      smex
+                                        ;scpaste
+      company
+      cider
+      clojure-mode
+      clojure-mode-extra-font-locking
+      clj-refactor
+      rainbow-delimiters
+      graphviz-dot-mode
+      magit
+      slamhound
+      projectile
+      zenburn-theme
+      fill-column-indicator
+      expand-region
+      powerline
+      smart-mode-line
+      discover
+      discover-my-major
+      which-key
+      markdown-mode
+      flycheck
+      company-jedi)))
+
+(condition-case nil
+    (init--install-packages)
+  (error
+   (package-refresh-contents)
+   (init--install-packages)))
 
 (require 'powerline)
 (require 'fill-column-indicator) ;; line indicating some edge column
@@ -88,7 +99,7 @@
 (require 'ido-vertical-mode)
 (ido-vertical-mode)
 ; up-down works better in vertical mode
-(setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right) 
+(setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
 (load-theme 'zenburn t)
 (prefer-coding-system 'utf-8-unix)
 (projectile-global-mode)
@@ -130,7 +141,6 @@
       ido-handle-duplicate-virtual-buffers 2
       ido-max-prospects 10)
 (setq linum-format "%4d ") ; Line numbers gutter should be four characters wide
-(setq inhibit-startup-message t)
 (setq echo-keystrokes 0.1
       use-dialog-box nil
       visible-bell t)
@@ -149,7 +159,7 @@
         ("json" . "cheshire.core")
         ("jdbc" . "clojure.java.jdbc")
         ("comp" . "com.stuartsierra.component")))
-    
+
 
 (defun my-clojure-mode-hook ()
     (clj-refactor-mode 1)
@@ -188,4 +198,3 @@
 (define-key clojure-mode-map (kbd "C-c M-y") 'cider-namespace-refresh)
 
 (provide 'init)
-
