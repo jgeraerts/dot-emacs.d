@@ -28,7 +28,13 @@
 
 ;; Add external projects to load path
 (dolist (project (directory-files site-lisp-dir t "\\w+"))
-  (when (file-directory-p project)    (add-to-list 'load-path project)))
+  (when (file-directory-p project)    
+    (add-to-list 'load-path project)))
+
+;; Save point position between sessions
+(require 'saveplace)
+(setq-default save-place t)
+(setq save-place-file (expand-file-name ".places" user-emacs-directory))
 
 
 (require 'setup-package)
