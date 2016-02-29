@@ -2,9 +2,12 @@
 ;;; Commentary:
 ;;;    make flycheck happy
 
+
+;;; This caused emacs freeze when my laptop is disconnected from the DC
+(setq w32-get-true-file-attributes nil)
+
 ;;; Code:
 ;; Turn off mouse interface early in startup to avoid momentary display
-
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
