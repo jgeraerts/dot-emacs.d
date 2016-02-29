@@ -73,7 +73,7 @@
       company-jedi
       smooth-scrolling
       undo-tree
-      dash)))
+      whitespace-cleanup-mode)))
 
 (condition-case nil
     (init--install-packages)
@@ -202,5 +202,12 @@
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
 (define-key clojure-mode-map (kbd "C-c M-y") 'cider-namespace-refresh)
+
+;;; whitespace setup
+(setq whitespace-style '(trailing lines space-before-tab
+                                  indentation space-after-tab)
+      whitespace-line-column 100)
+
+(eval-after-load "whitespace-cleanup-mode" '(diminish 'whitespace-cleanup-mode))
 
 (provide 'init)
