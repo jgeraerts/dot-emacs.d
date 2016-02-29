@@ -105,7 +105,6 @@
          (not (eq major-mode 'dired-mode)))
         (fci-mode 1))))
 
-(global-hl-line-mode 1) ; highlight line
 (ido-mode 1)
 (ido-everywhere 1)
 (ido-ubiquitous-mode 1)

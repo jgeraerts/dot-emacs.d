@@ -1,3 +1,4 @@
+(global-hl-line-mode 1) ; highlight line
 
 ; prevent creating lockfiles so that directory timestamps are not
 ; updated. This triggers lein-test-refresh to do a test run before
@@ -123,7 +124,7 @@
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
 ;; No electric indent
-(setq electric-indent-mode nil)
+;(setq electric-indent-mode nil)
 
 ;; Nic says eval-expression-print-level needs to be set to nil (turned off) so
 ;; that you can always see what's happening.
