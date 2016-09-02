@@ -220,3 +220,4 @@
           (set-buffer-modified-p nil))))))
 
 (provide 'init)
+;;; init.el ends here
