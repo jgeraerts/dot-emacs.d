@@ -121,12 +121,11 @@
 (load-theme 'zenburn t)
 (prefer-coding-system 'utf-8-unix)
 (projectile-global-mode)
-(global-linum-mode t)               ; Always show line numbers on left
+;(global-linum-mode t)               ; Always show line numbers on left
 (global-fci-mode 1)
 (powerline-default-theme)
 (show-paren-mode)
 (which-key-mode)
-
 
 (add-to-list 'company-backends 'company-jedi)
 
@@ -146,7 +145,7 @@
       ido-use-virtual-buffers t
       ido-handle-duplicate-virtual-buffers 2
       ido-max-prospects 10)
-(setq linum-format "%4d ") ; Line numbers gutter should be four characters wide
+;(setq linum-format "%4d ") ; Line numbers gutter should be four characters wide
 (setq echo-keystrokes 0.1
       use-dialog-box nil
       visible-bell t)
