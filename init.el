@@ -2,11 +2,30 @@
 ;;; Commentary:
 ;;;
 
+;; Turn off mouse interface early in startup to avoid momentary display
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+
+;; No splash screen please ... jeez
+(setq inhibit-startup-message t)
+
 (setq site-lisp-dir
       (expand-file-name "site-lisp" user-emacs-directory))
 
 (setq settings-dir
       (expand-file-name "settings" user-emacs-directory))
+
+(add-to-list 'load-path settings-dir)
+(add-to-list 'load-path site-lisp-dir)
+
 
 ;; Add external projects to load path
 (dolist (project (directory-files site-lisp-dir t "\\w+"))
@@ -16,27 +35,13 @@
 
 (prefer-coding-system 'utf-8-unix)
 
-;(package-initialize)
-
 (setq w32-get-true-file-attributes nil)
-
-
-
-
-;;; Code:
-;; Turn off mouse interface early in startup to avoid momentary display
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-
-;; No splash screen please ... jeez
-(setq inhibit-startup-message t)
-
 
 ;; Set up load path
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path site-lisp-dir)
 
+(require 'appearance)
 
 ;; Save point position between sessions
 (require 'saveplace)
@@ -74,7 +79,6 @@
      markdown-mode
      multiple-cursors
      paredit
-     powerline
      projectile
      puppet-mode
      rainbow-delimiters
@@ -97,7 +101,7 @@
    (init--install-packages)))
 
 (require 'sane-defaults)
-(require 'powerline)
+(sml/setup)g
 (require 'fill-column-indicator) ;; line indicating some edge column
 (require 'rainbow-delimiters)
 ;(require 'cider)
@@ -236,3 +240,17 @@
 
 (provide 'init)
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" default))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
