@@ -2,13 +2,11 @@
 ;;; Commentary:
 ;;;
 
-;; Turn off mouse interface early in startup to avoid momentary display
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
+;(package-initialize)
+(prefer-coding-system 'utf-8-unix)
+
+(setq w32-get-true-file-attributes nil)
 
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -32,16 +30,18 @@
   (when (file-directory-p project)    
     (add-to-list 'load-path project)))
 
+;; Write backup files to own directory
+(setq backup-directory-alist
+      `(("." . ,(expand-file-name
+                 (concat user-emacs-directory "backups")))))
 
-(prefer-coding-system 'utf-8-unix)
 
-(setq w32-get-true-file-attributes nil)
-
-;; Set up load path
-(add-to-list 'load-path settings-dir)
-(add-to-list 'load-path site-lisp-dir)
+;; Keep emacs Custom-settings in separate file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)
 
 (require 'appearance)
+
 
 ;; Save point position between sessions
 (require 'saveplace)
@@ -55,6 +55,7 @@
   (packages-install
    '(
      better-defaults
+     browse-kill-ring
      cider
      clj-refactor
      clojure-mode
@@ -101,19 +102,20 @@
    (init--install-packages)))
 
 (require 'sane-defaults)
-(sml/setup)g
+(sml/setup)
 (require 'fill-column-indicator) ;; line indicating some edge column
 (require 'rainbow-delimiters)
-;(require 'cider)
 (require 'which-key)
-(require 'flx-ido)
 (require 'company)
+(require 'key-bindings)
 
-(defun cider-namespace-refresh ()
-  (interactive)
-  (cider-interactive-eval
-   "(require 'clojure.tools.namespace.repl)
-    (clojure.tools.namespace.repl/refresh)"))
+(eval-after-load 'ido '(require 'setup-ido))
+
+(require 'browse-kill-ring)
+(setq browse-kill-ring-quit-action 'save-and-restore)
+
+(require 'smex)
+(smex-initialize)
 
 ;https://www.emacswiki.org/emacs/FillColumnIndicator#toc11
 (define-globalized-minor-mode global-fci-mode fci-mode
@@ -123,19 +125,6 @@
          (not (eq major-mode 'dired-mode)))
         (fci-mode 1))))
 
-(ido-mode 1)
-(ido-everywhere 1)
-(ido-ubiquitous-mode 1)
-
-(flx-ido-mode 1)
-;; disable ido faces to see flx highlights.
-(setq ido-use-faces nil)
-
-;; flx-ido looks better with ido-vertical-mode
-(require 'ido-vertical-mode)
-(ido-vertical-mode)
-; up-down works better in vertical mode
-(setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right)
 (load-theme 'zenburn t)
 (projectile-global-mode)
 ;(global-linum-mode t)               ; Always show line numbers on left
@@ -204,15 +193,6 @@
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'prog-mode-hook 'idle-highlight-mode)
 
-(global-set-key (kbd "C-=") 'er/expand-region)
-(global-set-key (kbd "C-c f") 'find-file-in-project)
-(global-set-key (kbd "C-c g") 'magit-status)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; This is your old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-(define-key global-map (kbd "C-+") 'text-scale-increase)
-(define-key global-map (kbd "C--") 'text-scale-decrease)
 
 
 ;;; whitespace setup
@@ -238,19 +218,12 @@
           (set-visited-file-name new-name)
           (set-buffer-modified-p nil))))))
 
+(defun cider-namespace-refresh ()
+  (interactive)
+  (cider-interactive-eval
+   "(require 'clojure.tools.namespace.repl)
+    (clojure.tools.namespace.repl/refresh)"))
+
+
 (provide 'init)
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" default))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
