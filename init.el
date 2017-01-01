@@ -112,7 +112,8 @@
 (require 'key-bindings)
 
 (eval-after-load 'ido '(require 'setup-ido))
-
+(require 'setup-hippie)
+(require 'setup-paredit)
 (require 'browse-kill-ring)
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
@@ -140,12 +141,6 @@
 
 (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
 
-
-
-
-;; Configure nrepl.el
-;(setq nrepl-hide-special-buffers t)
-
 (setq TeX-engine 'xetex)
 (setq ido-enable-prefix nil
       ido-enable-flex-matching t
@@ -163,32 +158,16 @@
 (setq-default show-trailing-whitespace t)
 (setq-default indicate-empty-lines t)
 
-
-
-(defun my-clojure-mode-hook ()
-  (require 'cider)
-  (define-key clojure-mode-map (kbd "C-c M-y") 'cider-namespace-refresh)
-  (setq cider-repl-popup-stacktraces-in-repl t)
-  (setq nrepl-popup-on-error nil) ; Don't popup new buffer for errors (show in nrepl buffer)
-  (setq cider-repl-history-file "~/.emacs.d/nrepl-history")
-  (setq nrepl-log-messages t)
-  (clj-refactor-mode 1)
-  (yas-minor-mode 1) ; for adding require/use/import statements
-  ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-  (cljr-add-keybindings-with-prefix "C-c C-m"))
-
-(add-hook 'clojure-mode-hook #'my-clojure-mode-hook)
-
 (add-hook 'after-init-hook #'global-flycheck-mode)
 ;; Some default eldoc facilities
 ;;(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
-(add-hook 'clojure-mode-hook 'paredit-mode)
-(add-hook 'nrepl-mode-hook 'subword-mode)
+;(add-hook 'clojure-mode-hook 'paredit-mode)
+;(add-hook 'nrepl-mode-hook 'subword-mode)
 ;; company mode
-(add-hook 'cider-repl-mode-hook 'company-mode)
-(add-hook 'cider-mode-hook 'company-mode)
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'prog-mode-hook 'idle-highlight-mode)
+;(add-hook 'cider-repl-mode-hook 'company-mode)
+;(add-hook 'cider-mode-hook 'company-mode)
+;(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+;(add-hook 'prog-mode-hook 'idle-highlight-mode)
 
 
 
