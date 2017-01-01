@@ -129,11 +129,17 @@
 (projectile-global-mode)
 ;(global-linum-mode t)               ; Always show line numbers on left
 (global-fci-mode 1)
-(powerline-default-theme)
+;(powerline-default-theme)
 (show-paren-mode)
 (which-key-mode)
+(require 'mode-mappings)
 
 (add-to-list 'company-backends 'company-jedi)
+
+(eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
+
+
+
 
 ;; Configure nrepl.el
 ;(setq nrepl-hide-special-buffers t)
