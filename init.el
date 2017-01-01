@@ -70,6 +70,8 @@
      find-file-in-project
      flx-ido
      flycheck
+     flycheck-pos-tip
+     flycheck-clojure
      graphviz-dot-mode
      hydra
      idle-highlight-mode
@@ -161,17 +163,6 @@
 (setq-default show-trailing-whitespace t)
 (setq-default indicate-empty-lines t)
 
-(setq cljr-magic-require-namespaces
-      '(("io"   . "clojure.java.io")
-        ("set"  . "clojure.set")
-        ("str"  . "clojure.string")
-        ("walk" . "clojure.walk")
-        ("zip"  . "clojure.zip")
-        ("time" . "clj-time.core")
-        ("log"  . "clojure.tools.logging")
-        ("json" . "cheshire.core")
-        ("jdbc" . "clojure.java.jdbc")
-        ("comp" . "com.stuartsierra.component")))
 
 
 (defun my-clojure-mode-hook ()
@@ -190,7 +181,7 @@
 
 (add-hook 'after-init-hook #'global-flycheck-mode)
 ;; Some default eldoc facilities
-(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+;;(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 (add-hook 'clojure-mode-hook 'paredit-mode)
 (add-hook 'nrepl-mode-hook 'subword-mode)
 ;; company mode
