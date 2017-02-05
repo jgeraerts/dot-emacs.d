@@ -62,6 +62,7 @@
      clojure-mode-extra-font-locking
      company
      company-jedi
+     dockerfile-mode
      discover
      discover-my-major
      edn
@@ -72,6 +73,7 @@
      flycheck
      flycheck-pos-tip
      flycheck-clojure
+     go-mode
      graphviz-dot-mode
      hydra
      idle-highlight-mode
