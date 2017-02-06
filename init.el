@@ -66,6 +66,7 @@
      discover
      discover-my-major
      edn
+     ensime
      expand-region
      fill-column-indicator
      find-file-in-project
@@ -87,6 +88,8 @@
      projectile
      puppet-mode
      rainbow-delimiters
+     sbt-mode
+     scala-mode
      slamhound
      smart-mode-line
      smex
