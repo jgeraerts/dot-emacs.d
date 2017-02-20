@@ -125,6 +125,8 @@
 (require 'smex)
 (smex-initialize)
 
+(require 'restclient)
+
 ;https://www.emacswiki.org/emacs/FillColumnIndicator#toc11
 (define-globalized-minor-mode global-fci-mode fci-mode
   (lambda ()
