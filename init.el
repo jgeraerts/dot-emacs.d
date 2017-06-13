@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;;
 
-
+;;; Code:
 ;(package-initialize)
 (prefer-coding-system 'utf-8-unix)
 
@@ -166,6 +166,8 @@
 (setq-default indicate-empty-lines t)
 
 (add-hook 'after-init-hook #'global-flycheck-mode)
+(add-hook 'after-init-hook 'global-company-mode)
+(add-hook 'after-init-hook 'yas-global-mode)
 ;; Some default eldoc facilities
 ;;(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 ;(add-hook 'clojure-mode-hook 'paredit-mode)

@@ -59,7 +59,7 @@
 
 ;(require 'clj-autotest)
 
-(require 'flycheck-clojure)
+;(require 'flycheck-clojure)
 
 (defun my-cider-mode-enable-flycheck ()
   ;; (when (and (s-ends-with-p ".clj" (buffer-file-name))
@@ -69,10 +69,16 @@
 
 (add-hook 'cider-mode-hook 'my-cider-mode-enable-flycheck)
 
-(eval-after-load 'flycheck '(add-to-list 'flycheck-checkers 'clojure-cider-eastwood))
+(defun my-clojure-mode-hook ()
+  (clj-refactor-mode 1)
+  (yas-minor-mode 1)
+)
+
+(add-hook 'clojure-mode-hook 'my-clojure-mode-hook)
+
+;(eval-after-load 'flycheck '(add-to-list 'flycheck-checkers 'clojure-cider-eastwood))
 
 ;; Make q quit out of find-usages to previous window config
-
 (defadvice cljr-find-usages (before setup-grep activate)
   (window-configuration-to-register ?$))
 
