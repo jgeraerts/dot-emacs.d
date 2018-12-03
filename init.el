@@ -54,6 +54,7 @@
 (defun init--install-packages ()
   (packages-install
    '(
+     add-node-modules-path
      better-defaults
      browse-kill-ring
      cider
@@ -81,9 +82,11 @@
      ido-ubiquitous
      ido-vertical-mode
      inflections
+     rjsx-mode
      magit
      markdown-mode
      multiple-cursors
+     neotree
      paredit
      projectile
      puppet-mode
@@ -100,6 +103,7 @@
      yaml-mode
      yasnippet
      zenburn-theme
+     terraform-mode
      )))
 
 (condition-case nil
@@ -108,6 +112,8 @@
    (package-refresh-contents)
    (init--install-packages)))
 
+(require 'neotree)
+(require 'sublimity)
 (require 'sane-defaults)
 (sml/setup)
 (require 'fill-column-indicator) ;; line indicating some edge column
@@ -115,17 +121,20 @@
 (require 'which-key)
 (require 'company)
 (require 'key-bindings)
+(require 'mode-mappings)
 
-(eval-after-load 'ido '(require 'setup-ido))
 (require 'setup-hippie)
 (require 'setup-paredit)
 (require 'browse-kill-ring)
-(setq browse-kill-ring-quit-action 'save-and-restore)
-
-(require 'smex)
-(smex-initialize)
-
 (require 'restclient)
+(require 'smex)
+
+(setq browse-kill-ring-quit-action 'save-and-restore)
+(eval-after-load 'ido '(require 'setup-ido))
+(smex-initialize)
+(sublimity-mode 1)
+
+
 
 ;https://www.emacswiki.org/emacs/FillColumnIndicator#toc11
 (define-globalized-minor-mode global-fci-mode fci-mode
@@ -142,7 +151,9 @@
 ;(powerline-default-theme)
 (show-paren-mode)
 (which-key-mode)
-(require 'mode-mappings)
+
+(global-set-key [f8] 'neotree-toggle)
+
 
 (add-to-list 'company-backends 'company-jedi)
 
@@ -186,6 +197,12 @@
       whitespace-line-column 100)
 
 (eval-after-load "whitespace-cleanup-mode" '(diminish 'whitespace-cleanup-mode))
+(eval-after-load 'js2-mode
+  '(add-hook 'js2-mode-hook 'add-node-modules-path))
+
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
+(setq js2-strict-trailing-comma-warning nil)
 
 ;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
 (defun rename-file-and-buffer (new-name)
@@ -208,6 +225,7 @@
   (cider-interactive-eval
    "(require 'clojure.tools.namespace.repl)
     (clojure.tools.namespace.repl/refresh)"))
+
 
 
 (provide 'init)

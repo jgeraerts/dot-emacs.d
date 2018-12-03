@@ -4,3 +4,6 @@
 [submodule "site-lisp/restclient"]
 	path = site-lisp/restclient
 	url = https://github.com/pashky/restclient.el
+[submodule "site-lisp/sublimity"]
+	path = site-lisp/sublimity
+	url = https://github.com/zk-phi/sublimity
