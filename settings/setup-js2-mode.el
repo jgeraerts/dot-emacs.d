@@ -49,7 +49,7 @@
 (add-hook 'js-mode-hook #'smartparens-mode)
 
 ;; enable rjsx mode when react is imported in a file
-(add-to-list 'magic-mode-alist '("import.*react" . rjsx-mode))
+
 
 (require 'js2-imenu-extras)
 (js2-imenu-extras-setup)

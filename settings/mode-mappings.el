@@ -25,5 +25,6 @@
 
 ;; js2-mode
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-to-list 'magic-mode-alist '("import.*react" . rjsx-mode))
 
 (provide 'mode-mappings)

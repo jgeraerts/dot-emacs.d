@@ -75,6 +75,7 @@
      go-mode
      graphviz-dot-mode
      helm
+     helm-projectile
      hydra
      idle-highlight-mode
      ido-ubiquitous
@@ -89,6 +90,7 @@
      projectile
      puppet-mode
      rainbow-delimiters
+     react-snippets
      rjsx-mode
      sbt-mode
      scala-mode
@@ -105,6 +107,7 @@
      xref-js2
      yaml-mode
      yasnippet
+     yasnippet-snippets
      zenburn-theme
      )))
 
@@ -132,6 +135,7 @@
 (require 'setup-paredit)
 (require 'setup-flycheck)
 (require 'setup-company)
+(require 'setup-yasnippet)
 (require 'browse-kill-ring)
 (require 'restclient)
 (require 'smex)
@@ -141,6 +145,7 @@
 
 (eval-after-load 'ido '(require 'setup-ido))
 (eval-after-load 'js2-mode '(require 'setup-js2-mode))
+
 
 (smex-initialize)
 (sublimity-mode 1)
@@ -155,6 +160,7 @@
 
 
 (projectile-global-mode)
+(helm-projectile-on)
 ;(global-linum-mode t)               ; Always show line numbers on left
 (global-fci-mode 1)
 ;(powerline-default-theme)
@@ -163,6 +169,7 @@
 
 (global-set-key [f8] 'neotree-toggle)
 (global-set-key (kbd "C-x b") 'helm-mini)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
 
 
 (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
