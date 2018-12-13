@@ -14,3 +14,8 @@ url
 *.elc
 .places
 abbrev_defs
+custom.el
+/ido.last
+/network-security.data
+/recentf
+ensime

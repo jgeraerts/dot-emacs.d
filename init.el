@@ -4,8 +4,6 @@
 
 ;;; Code:
 ;(package-initialize)
-(prefer-coding-system 'utf-8-unix)
-
 (setq w32-get-true-file-attributes nil)
 
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
@@ -24,10 +22,9 @@
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path site-lisp-dir)
 
-
 ;; Add external projects to load path
 (dolist (project (directory-files site-lisp-dir t "\\w+"))
-  (when (file-directory-p project)    
+  (when (file-directory-p project)
     (add-to-list 'load-path project)))
 
 ;; Write backup files to own directory
@@ -42,12 +39,10 @@
 
 (require 'appearance)
 
-
 ;; Save point position between sessions
 (require 'saveplace)
 (setq-default save-place t)
 (setq save-place-file (expand-file-name ".places" user-emacs-directory))
-
 
 (require 'setup-package)
 
@@ -55,6 +50,7 @@
   (packages-install
    '(
      add-node-modules-path
+     ag
      better-defaults
      browse-kill-ring
      cider
@@ -63,9 +59,10 @@
      clojure-mode-extra-font-locking
      company
      company-jedi
-     dockerfile-mode
+     company-tern
      discover
      discover-my-major
+     dockerfile-mode
      edn
      ensime
      expand-region
@@ -73,16 +70,17 @@
      find-file-in-project
      flx-ido
      flycheck
-     flycheck-pos-tip
      flycheck-clojure
+     flycheck-pos-tip
      go-mode
      graphviz-dot-mode
+     helm
      hydra
      idle-highlight-mode
      ido-ubiquitous
      ido-vertical-mode
      inflections
-     rjsx-mode
+     js2-refactor
      magit
      markdown-mode
      multiple-cursors
@@ -91,19 +89,23 @@
      projectile
      puppet-mode
      rainbow-delimiters
+     rjsx-mode
      sbt-mode
      scala-mode
      slamhound
      smart-mode-line
+     smartparens
      smex
      smooth-scrolling
+     terraform-mode
+     tern
      undo-tree
      which-key
      whitespace-cleanup-mode
+     xref-js2
      yaml-mode
      yasnippet
      zenburn-theme
-     terraform-mode
      )))
 
 (condition-case nil
@@ -112,6 +114,8 @@
    (package-refresh-contents)
    (init--install-packages)))
 
+(load-theme 'zenburn t)
+
 (require 'neotree)
 (require 'sublimity)
 (require 'sane-defaults)
@@ -119,22 +123,27 @@
 (require 'fill-column-indicator) ;; line indicating some edge column
 (require 'rainbow-delimiters)
 (require 'which-key)
-(require 'company)
 (require 'key-bindings)
 (require 'mode-mappings)
+(require 'smartparens-config)
+(require 'helm-config)
 
 (require 'setup-hippie)
 (require 'setup-paredit)
+(require 'setup-flycheck)
+(require 'setup-company)
 (require 'browse-kill-ring)
 (require 'restclient)
 (require 'smex)
 
+
 (setq browse-kill-ring-quit-action 'save-and-restore)
+
 (eval-after-load 'ido '(require 'setup-ido))
+(eval-after-load 'js2-mode '(require 'setup-js2-mode))
+
 (smex-initialize)
 (sublimity-mode 1)
-
-
 
 ;https://www.emacswiki.org/emacs/FillColumnIndicator#toc11
 (define-globalized-minor-mode global-fci-mode fci-mode
@@ -144,7 +153,7 @@
          (not (eq major-mode 'dired-mode)))
         (fci-mode 1))))
 
-(load-theme 'zenburn t)
+
 (projectile-global-mode)
 ;(global-linum-mode t)               ; Always show line numbers on left
 (global-fci-mode 1)
@@ -153,9 +162,8 @@
 (which-key-mode)
 
 (global-set-key [f8] 'neotree-toggle)
+(global-set-key (kbd "C-x b") 'helm-mini)
 
-
-(add-to-list 'company-backends 'company-jedi)
 
 (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
 
@@ -176,19 +184,9 @@
 (setq-default show-trailing-whitespace t)
 (setq-default indicate-empty-lines t)
 
-(add-hook 'after-init-hook #'global-flycheck-mode)
-(add-hook 'after-init-hook 'global-company-mode)
 (add-hook 'after-init-hook 'yas-global-mode)
-;; Some default eldoc facilities
-;;(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
-;(add-hook 'clojure-mode-hook 'paredit-mode)
-;(add-hook 'nrepl-mode-hook 'subword-mode)
-;; company mode
-;(add-hook 'cider-repl-mode-hook 'company-mode)
-;(add-hook 'cider-mode-hook 'company-mode)
-;(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-;(add-hook 'prog-mode-hook 'idle-highlight-mode)
 
+;;
 
 
 ;;; whitespace setup
@@ -197,12 +195,9 @@
       whitespace-line-column 100)
 
 (eval-after-load "whitespace-cleanup-mode" '(diminish 'whitespace-cleanup-mode))
-(eval-after-load 'js2-mode
-  '(add-hook 'js2-mode-hook 'add-node-modules-path))
 
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
-(setq js2-strict-trailing-comma-warning nil)
+
 
 ;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
 (defun rename-file-and-buffer (new-name)
@@ -226,7 +221,7 @@
    "(require 'clojure.tools.namespace.repl)
     (clojure.tools.namespace.repl/refresh)"))
 
-
-
 (provide 'init)
+;;; Local Variables:
+;;; byte-compile-warnings: (not free-vars)
 ;;; init.el ends here

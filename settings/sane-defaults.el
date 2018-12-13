@@ -36,11 +36,11 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; UTF-8 please
-(setq locale-coding-system 'utf-8) ; pretty
-(set-terminal-coding-system 'utf-8) ; pretty
-(set-keyboard-coding-system 'utf-8) ; pretty
-(set-selection-coding-system 'utf-8) ; please
-(prefer-coding-system 'utf-8) ; with sugar on top
+(setq locale-coding-system 'utf-8-unix) ; pretty
+(set-terminal-coding-system 'utf-8-unix) ; pretty
+(set-keyboard-coding-system 'utf-8-unix) ; pretty
+(set-selection-coding-system 'utf-8-unix) ; please
+(prefer-coding-system 'utf-8-unix) ; with sugar on top
 
 ;; Show active region
 (transient-mark-mode 1)
