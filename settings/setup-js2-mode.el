@@ -28,18 +28,11 @@
 (require 'js2-refactor)
 (require 'rjsx-mode)
 
-
-
-
 (js2r-add-keybindings-with-prefix "C-c C-m")
 
 (add-hook 'js-mode-hook (lambda () (tern-mode t)))
 (add-hook 'js2-mode-hook #'js2-refactor-mode)
 (add-hook 'js2-mode-hook 'add-node-modules-path)
-(add-hook 'js2-mode-hook
-             (lambda ()
-               (add-hook 'xref-backend-functions
-                         #'xref-js2-xref-backend nil t)))
 
 (add-hook 'js2-mode-hook
           (lambda ()

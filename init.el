@@ -75,6 +75,9 @@
      go-mode
      graphviz-dot-mode
      helm
+     helm-ag
+     helm-descbinds
+     helm-mt
      helm-projectile
      hydra
      idle-highlight-mode
@@ -84,6 +87,7 @@
      js2-refactor
      magit
      markdown-mode
+     multi-term
      multiple-cursors
      neotree
      paredit
@@ -99,12 +103,11 @@
      smartparens
      smex
      smooth-scrolling
-     terraform-mode
      tern
+     terraform-mode
      undo-tree
      which-key
      whitespace-cleanup-mode
-     xref-js2
      yaml-mode
      yasnippet
      yasnippet-snippets
@@ -119,10 +122,11 @@
 
 (load-theme 'zenburn t)
 
+(sml/setup)
+
 (require 'neotree)
 (require 'sublimity)
 (require 'sane-defaults)
-(sml/setup)
 (require 'fill-column-indicator) ;; line indicating some edge column
 (require 'rainbow-delimiters)
 (require 'which-key)
@@ -166,6 +170,7 @@
 ;(powerline-default-theme)
 (show-paren-mode)
 (which-key-mode)
+(which-key-setup-side-window-right)
 
 (global-set-key [f8] 'neotree-toggle)
 (global-set-key (kbd "C-x b") 'helm-mini)
