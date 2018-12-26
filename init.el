@@ -60,6 +60,7 @@
      company
      company-jedi
      company-tern
+     company-flow
      discover
      discover-my-major
      dockerfile-mode
@@ -68,8 +69,10 @@
      expand-region
      fill-column-indicator
      find-file-in-project
+     flow-minor-mode
      flx-ido
      flycheck
+     flycheck-flow
      flycheck-clojure
      flycheck-pos-tip
      go-mode
@@ -85,6 +88,8 @@
      ido-vertical-mode
      inflections
      js2-refactor
+     lsp-mode
+     lsp-ui
      magit
      markdown-mode
      multi-term
@@ -144,14 +149,15 @@
 (require 'restclient)
 (require 'smex)
 
+;(require 'lsp-ui)
+;(add-hook 'lsp-mode-hook 'lsp-ui-mode)
 
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
 (eval-after-load 'ido '(require 'setup-ido))
 (eval-after-load 'js2-mode '(require 'setup-js2-mode))
+(eval-after-load 'smex '(smex-initialize))
 
-
-(smex-initialize)
 (sublimity-mode 1)
 
 ;https://www.emacswiki.org/emacs/FillColumnIndicator#toc11
@@ -162,12 +168,9 @@
          (not (eq major-mode 'dired-mode)))
         (fci-mode 1))))
 
-
 (projectile-global-mode)
 (helm-projectile-on)
-;(global-linum-mode t)               ; Always show line numbers on left
 (global-fci-mode 1)
-;(powerline-default-theme)
 (show-paren-mode)
 (which-key-mode)
 (which-key-setup-side-window-right)
@@ -175,7 +178,6 @@
 (global-set-key [f8] 'neotree-toggle)
 (global-set-key (kbd "C-x b") 'helm-mini)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
-
 
 (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
 
@@ -198,18 +200,12 @@
 
 (add-hook 'after-init-hook 'yas-global-mode)
 
-;;
-
-
 ;;; whitespace setup
 (setq whitespace-style '(trailing lines space-before-tab
                                   indentation space-after-tab)
       whitespace-line-column 100)
 
 (eval-after-load "whitespace-cleanup-mode" '(diminish 'whitespace-cleanup-mode))
-
-
-
 
 ;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
 (defun rename-file-and-buffer (new-name)
