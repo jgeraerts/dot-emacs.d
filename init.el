@@ -168,7 +168,12 @@
          (not (eq major-mode 'dired-mode)))
         (fci-mode 1))))
 
-(projectile-global-mode)
+(require 'projectile)
+
+(with-eval-after-load "projectile" 
+  (projectile-mode +1)                                       
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+
 (helm-projectile-on)
 (global-fci-mode 1)
 (show-paren-mode)
@@ -206,6 +211,11 @@
       whitespace-line-column 100)
 
 (eval-after-load "whitespace-cleanup-mode" '(diminish 'whitespace-cleanup-mode))
+
+(require 'tramp)
+(setq tramp-default-proxies-alist nil)
+(add-to-list 'tramp-default-proxies-alist
+             '("home\\.geraerts\\.local\\'" "\\`root\\'" "/plink:pi@%h:"))
 
 ;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
 (defun rename-file-and-buffer (new-name)

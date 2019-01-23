@@ -6,7 +6,6 @@
 (require 'dash)
 
 ;;; Code:
-
 (setq package-archives
       '(("GNU ELPA"     . "https://elpa.gnu.org/packages/")
         ("MELPA Stable" . "https://stable.melpa.org/packages/")
@@ -15,7 +14,6 @@
       '(("MELPA Stable" . 10)
         ("GNU ELPA"     . 5)
         ("MELPA"        . 0)))
-
 
 (package-initialize)
 
