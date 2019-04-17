@@ -22,6 +22,9 @@
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path site-lisp-dir)
 
+;; Are we on a mac?
+(setq is-mac (equal system-type 'darwin))
+
 ;; Add external projects to load path
 (dolist (project (directory-files site-lisp-dir t "\\w+"))
   (when (file-directory-p project)
@@ -54,6 +57,7 @@
      better-defaults
      browse-kill-ring
      cider
+     cider-hydra
      clj-refactor
      clojure-mode
      clojure-mode-extra-font-locking
@@ -61,6 +65,7 @@
      company-jedi
      company-tern
      company-flow
+     company-go
      discover
      discover-my-major
      dockerfile-mode
@@ -82,9 +87,11 @@
      helm-descbinds
      helm-mt
      helm-projectile
+     helm-cider
+     helm-cider-history
      hydra
      idle-highlight-mode
-     ido-ubiquitous
+     ;;ido-ubiquitous
      ido-vertical-mode
      inflections
      js2-refactor
@@ -103,7 +110,7 @@
      rjsx-mode
      sbt-mode
      scala-mode
-     slamhound
+     ;;slamhound
      smart-mode-line
      smartparens
      smex
@@ -150,7 +157,12 @@
 (require 'smex)
 
 ;(require 'lsp-ui)
-;(add-hook 'lsp-mode-hook 'lsp-ui-mode)
+                                        ;(add-hook 'lsp-mode-hook 'lsp-ui-mode)
+
+;; Setup environment variables from the user's shell.
+(when is-mac
+  (require-package 'exec-path-from-shell)
+  (exec-path-from-shell-initialize))
 
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
@@ -212,10 +224,14 @@
 
 (eval-after-load "whitespace-cleanup-mode" '(diminish 'whitespace-cleanup-mode))
 
+(add-hook 'go-mode-hook (lambda ()
+                          (set (make-local-variable 'company-backends) '(company-go))
+                          (company-mode)))
+
 (require 'tramp)
-(setq tramp-default-proxies-alist nil)
-(add-to-list 'tramp-default-proxies-alist
-             '("home\\.geraerts\\.local\\'" "\\`root\\'" "/plink:pi@%h:"))
+(setq tramp-default-proxies-alist (quote (("home\\.geraerts\\.local\\'" "\\`root\\'" "/plink:pi@%h:")
+                                     (".*trendminer\\.net" "root" "/ssh:developer@%h:")
+                                     )))
 
 ;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
 (defun rename-file-and-buffer (new-name)

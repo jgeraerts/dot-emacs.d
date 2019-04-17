@@ -4,7 +4,7 @@
 
 (ido-mode t)
 (ido-everywhere 1)
-(ido-ubiquitous-mode 1)
+;(ido-ubiquitous-mode 1)
 
 (require 'flx-ido)
 (flx-ido-mode 1)
