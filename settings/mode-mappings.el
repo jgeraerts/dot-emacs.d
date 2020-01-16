@@ -29,4 +29,5 @@
 (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))
 (add-to-list 'auto-mode-alist '("containers\\/.*\\.js\\'" . rjsx-mode))
 
+(add-to-list 'auto-mode-alist '("\\.ts$" . typescript-mode))
 (provide 'mode-mappings)

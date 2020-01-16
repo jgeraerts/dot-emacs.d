@@ -1,3 +1,17 @@
+(use-package flycheck-clj-kondo
+  :ensure t)
+
+(use-package clojure-mode
+  :ensure t
+  :config
+  (require 'flycheck-clj-kondo))
+
+(use-package cider
+  :ensure t)
+
+(use-package clj-refactor
+  :ensure t)
+
 (require 'clojure-mode)
 (require 'clojure-mode-extra-font-locking)
 (require 'clj-refactor)
@@ -7,11 +21,6 @@
 
 (defadvice nrepl-load-current-buffer (before save-first activate)
   (save-buffer))
-
-(defun enable-clojure-mode-stuff ()
-  (clj-refactor-mode 1))
-
-(add-hook 'clojure-mode-hook 'enable-clojure-mode-stuff)
 
 (setq cljr-magic-require-namespaces
       '(("io"   . "clojure.java.io")
@@ -57,22 +66,11 @@
 
 ;; Some expectations features
 
-;(require 'clj-autotest)
-
-;(require 'flycheck-clojure)
-
-(defun my-cider-mode-enable-flycheck ()
-  ;; (when (and (s-ends-with-p ".clj" (buffer-file-name))
-  ;;            (not (s-ends-with-p "/dev/user.clj" (buffer-file-name))))
-  ;;   (flycheck-mode 1))
-  )
-
-(add-hook 'cider-mode-hook 'my-cider-mode-enable-flycheck)
-
 (defun my-clojure-mode-hook ()
-  (clj-refactor-mode 1)
+  ;(clj-refactor-mode 1)
   (yas-minor-mode 1)
-)
+  (cider-hydra-mode)
+  )
 
 (add-hook 'clojure-mode-hook 'my-clojure-mode-hook)
 
@@ -81,6 +79,5 @@
 ;; Make q quit out of find-usages to previous window config
 (defadvice cljr-find-usages (before setup-grep activate)
   (window-configuration-to-register ?$))
-
 
 (provide 'setup-clojure-mode)

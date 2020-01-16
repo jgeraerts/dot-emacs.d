@@ -107,6 +107,7 @@
      puppet-mode
      rainbow-delimiters
      react-snippets
+     ripgrep
      rjsx-mode
      sbt-mode
      scala-mode
@@ -117,7 +118,10 @@
      smooth-scrolling
      tern
      terraform-mode
+     tide
+     typescript-mode
      undo-tree
+     use-package
      which-key
      whitespace-cleanup-mode
      yaml-mode
@@ -146,7 +150,6 @@
 (require 'mode-mappings)
 (require 'smartparens-config)
 (require 'helm-config)
-
 (require 'setup-hippie)
 (require 'setup-paredit)
 (require 'setup-flycheck)
@@ -156,8 +159,13 @@
 (require 'restclient)
 (require 'smex)
 
-;(require 'lsp-ui)
-                                        ;(add-hook 'lsp-mode-hook 'lsp-ui-mode)
+
+(use-package org-journal
+  :ensure t
+  :defer t
+  :custom
+  (org-journal-dir "~/org/journal/")
+  (org-journal-date-format "%A, %d %B %Y"))
 
 ;; Setup environment variables from the user's shell.
 (when is-mac
@@ -169,7 +177,7 @@
 (eval-after-load 'ido '(require 'setup-ido))
 (eval-after-load 'js2-mode '(require 'setup-js2-mode))
 (eval-after-load 'smex '(smex-initialize))
-
+(eval-after-load 'typescript-mode '(require 'setup-typescript))
 (sublimity-mode 1)
 
 ;https://www.emacswiki.org/emacs/FillColumnIndicator#toc11
@@ -182,8 +190,8 @@
 
 (require 'projectile)
 
-(with-eval-after-load "projectile" 
-  (projectile-mode +1)                                       
+(with-eval-after-load "projectile"
+  (projectile-mode +1)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
 (helm-projectile-on)
@@ -254,6 +262,8 @@
   (cider-interactive-eval
    "(require 'clojure.tools.namespace.repl)
     (clojure.tools.namespace.repl/refresh)"))
+
+(server-start)
 
 (provide 'init)
 ;;; Local Variables:
