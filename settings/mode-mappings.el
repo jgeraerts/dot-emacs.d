@@ -4,7 +4,6 @@
 (add-to-list 'auto-mode-alist '("\\.yaml$" . yaml-mode))
 (add-to-list 'auto-mode-alist '("jsTestDriver\\.conf$" . yaml-mode))
 
-
 ;; Puppet
 (autoload 'puppet-mode "puppet-mode")
 (add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
@@ -30,4 +29,7 @@
 (add-to-list 'auto-mode-alist '("containers\\/.*\\.js\\'" . rjsx-mode))
 
 (add-to-list 'auto-mode-alist '("\\.ts$" . typescript-mode))
+
+(add-to-list 'auto-mode-alist '("\\.ino$" . c++-mode))
+
 (provide 'mode-mappings)

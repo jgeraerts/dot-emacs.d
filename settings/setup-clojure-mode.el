@@ -4,7 +4,10 @@
 (use-package clojure-mode
   :ensure t
   :config
-  (require 'flycheck-clj-kondo))
+  (require 'flycheck-clj-kondo)
+  (defun my-clojure-mode-hook ()
+           (clj-refactor-mode 1)
+           (yas-minor-mode 1)))
 
 (use-package cider
   :ensure t)
@@ -12,9 +15,6 @@
 (use-package clj-refactor
   :ensure t)
 
-(require 'clojure-mode)
-(require 'clojure-mode-extra-font-locking)
-(require 'clj-refactor)
 
 (defadvice clojure-test-run-tests (before save-first activate)
   (save-buffer))
@@ -66,18 +66,14 @@
 
 ;; Some expectations features
 
-(defun my-clojure-mode-hook ()
-  ;(clj-refactor-mode 1)
-  (yas-minor-mode 1)
-  (cider-hydra-mode)
-  )
-
 (add-hook 'clojure-mode-hook 'my-clojure-mode-hook)
+(add-hook 'clojure-mode-hook #'paredit-mode)
 
 ;(eval-after-load 'flycheck '(add-to-list 'flycheck-checkers 'clojure-cider-eastwood))
 
 ;; Make q quit out of find-usages to previous window config
-(defadvice cljr-find-usages (before setup-grep activate)
-  (window-configuration-to-register ?$))
+
+;
+
 
 (provide 'setup-clojure-mode)

@@ -58,11 +58,7 @@
      browse-kill-ring
      cider
      cider-hydra
-     clj-refactor
-     clojure-mode
-     clojure-mode-extra-font-locking
      company
-     company-jedi
      company-tern
      company-flow
      company-go
@@ -91,7 +87,6 @@
      helm-cider-history
      hydra
      idle-highlight-mode
-     ;;ido-ubiquitous
      ido-vertical-mode
      inflections
      js2-refactor
@@ -111,7 +106,6 @@
      rjsx-mode
      sbt-mode
      scala-mode
-     ;;slamhound
      smart-mode-line
      smartparens
      smex
@@ -155,6 +149,7 @@
 (require 'setup-flycheck)
 (require 'setup-company)
 (require 'setup-yasnippet)
+(require 'setup-python)
 (require 'browse-kill-ring)
 (require 'restclient)
 (require 'smex)
@@ -166,6 +161,10 @@
   :custom
   (org-journal-dir "~/org/journal/")
   (org-journal-date-format "%A, %d %B %Y"))
+
+(use-package feature-mode
+  :ensure t
+  :defer t)
 
 ;; Setup environment variables from the user's shell.
 (when is-mac
@@ -264,6 +263,8 @@
     (clojure.tools.namespace.repl/refresh)"))
 
 (server-start)
+;(setq sql-mysql-login-params (append sql-mysql-login-params '(port)))
+;(setq sql-postgres-login-params (append sql-postgres-login-params '(port)))
 
 (provide 'init)
 ;;; Local Variables:
