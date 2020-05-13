@@ -59,14 +59,14 @@
      cider
      cider-hydra
      company
-     company-tern
+     ;company-tern
      company-flow
      company-go
      discover
      discover-my-major
      dockerfile-mode
      edn
-     ensime
+     ;ensime
      expand-region
      fill-column-indicator
      find-file-in-project
