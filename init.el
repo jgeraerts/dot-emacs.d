@@ -59,14 +59,12 @@
      cider
      cider-hydra
      company
-     ;company-tern
      company-flow
      company-go
      discover
      discover-my-major
      dockerfile-mode
      edn
-     ;ensime
      expand-region
      fill-column-indicator
      find-file-in-project
@@ -112,8 +110,6 @@
      smooth-scrolling
      tern
      terraform-mode
-     tide
-     typescript-mode
      undo-tree
      use-package
      which-key
@@ -150,10 +146,15 @@
 (require 'setup-company)
 (require 'setup-yasnippet)
 (require 'setup-python)
+(require 'setup-typescript)
 (require 'browse-kill-ring)
 (require 'restclient)
 (require 'smex)
 
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
 
 (use-package org-journal
   :ensure t
@@ -173,10 +174,10 @@
 
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
+
 (eval-after-load 'ido '(require 'setup-ido))
 (eval-after-load 'js2-mode '(require 'setup-js2-mode))
 (eval-after-load 'smex '(smex-initialize))
-(eval-after-load 'typescript-mode '(require 'setup-typescript))
 (sublimity-mode 1)
 
 ;https://www.emacswiki.org/emacs/FillColumnIndicator#toc11
@@ -263,8 +264,6 @@
     (clojure.tools.namespace.repl/refresh)"))
 
 (server-start)
-;(setq sql-mysql-login-params (append sql-mysql-login-params '(port)))
-;(setq sql-postgres-login-params (append sql-postgres-login-params '(port)))
 
 (provide 'init)
 ;;; Local Variables:
