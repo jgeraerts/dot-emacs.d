@@ -147,6 +147,7 @@
 (require 'setup-yasnippet)
 (require 'setup-python)
 (require 'setup-typescript)
+(require 'setup-org)
 (require 'browse-kill-ring)
 (require 'restclient)
 (require 'smex)
@@ -156,16 +157,12 @@
   :config
   (editorconfig-mode 1))
 
-(use-package org-journal
-  :ensure t
-  :defer t
-  :custom
-  (org-journal-dir "~/org/journal/")
-  (org-journal-date-format "%A, %d %B %Y"))
-
 (use-package feature-mode
   :ensure t
   :defer t)
+
+
+
 
 ;; Setup environment variables from the user's shell.
 (when is-mac
