@@ -9,26 +9,26 @@
   :ensure org-plus-contrib
   :init
   (setq org-capture-templates
-              (quote (("t" "todo" entry (file "~//org/refile.org")
+              (quote (("t" "todo" entry (file "~//org/inbox.org")
                        "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-                      ("r" "respond" entry (file "~//org/refile.org")
+                      ("r" "respond" entry (file "~//org/inbox.org")
                        "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
-                      ("n" "note" entry (file "~//org/refile.org")
+                      ("n" "note" entry (file "~//org/inbox.org")
                        "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
                       ("j" "Journal" entry (file+datetree "~//org/diary.org")
                        "* %?\n%U\n" :clock-in t :clock-resume t)
-                      ("w" "org-protocol" entry (file "~//org/refile.org")
+                      ("w" "org-protocol" entry (file "~//org/inbox.org")
                        "* TODO Review %c\n%U\n" :immediate-finish t)
-                      ("m" "Meeting" entry (file "~//org/refile.org")
+                      ("m" "Meeting" entry (file "~//org/inbox.org")
                        "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
-                      ("p" "Phone call" entry (file "~//org/refile.org")
+                      ("p" "Phone call" entry (file "~//org/inbox.org")
                        "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
-                      ("h" "Habit" entry (file "~//org/refile.org")
+                      ("h" "Habit" entry (file "~//org/inbox.org")
                        "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
                       ("l" "Link" entry (file+headline "~/org/links.org" "Links")
                        "* %a %^g\n %?\n %T\n %i"))))
   (setq org-directory "~/org")
-  (setq org-default-notes-file "~/org/refile.org")
+  (setq org-default-notes-file "~/org/inbox.org")
   (setq org-agenda-files (quote ("~/org")))
                                         ;Targets include this file and any file contributing to the agenda - up to 9 levels deep
   (setq org-refile-targets (quote ((nil :maxlevel . 9)
@@ -39,9 +39,71 @@
   
                                         ; Targets complete directly with IDO
   (setq org-outline-path-complete-in-steps nil)
+  (setq org-todo-keywords
+        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+  
+  (setq org-todo-keyword-faces
+        (quote (("TODO" :foreground "red" :weight bold)
+                ("NEXT" :foreground "blue" :weight bold)
+                ("DONE" :foreground "forest green" :weight bold)
+                ("WAITING" :foreground "orange" :weight bold)
+                ("HOLD" :foreground "magenta" :weight bold)
+                ("CANCELLED" :foreground "forest green" :weight bold)
+                ("MEETING" :foreground "forest green" :weight bold)
+                ("PHONE" :foreground "forest green" :weight bold))))
 
-; Allow refile to create parent tasks with confirmation
-(setq org-refile-allow-creating-parent-nodes (quote confirm))
+  (setq org-todo-state-tags-triggers
+        (quote (("CANCELLED" ("CANCELLED" . t))
+                ("WAITING" ("WAITING" . t))
+                ("HOLD" ("WAITING") ("HOLD" . t))
+                (done ("WAITING") ("HOLD"))
+                ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+  
+                                        ; Allow refile to create parent tasks with confirmation
+  (setq org-refile-allow-creating-parent-nodes (quote confirm))
+  (setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                   (org-agenda-files :maxlevel . 9))))
+  (setq org-refile-use-outline-path t)
+  (setq org-outline-path-complete-in-steps nil)
+  (setq org-completion-use-ido t)
+  (setq org-indirect-buffer-display 'current-window)
+  (setq org-tag-alist (quote ((:startgroup)
+                              ("@errand" . ?e)
+                              ("@office" . ?o)
+                              ("@home" . ?H)
+                              (:endgroup)
+                              ("WAITING" . ?w)
+                              ("HOLD" . ?h)
+                              ("PERSONAL" . ?P)
+                              ("WORK" . ?W)
+                              ("ORG" . ?O)
+                              ("NOTE" . ?n)
+                              ("CANCELLED" . ?c)
+                              ("FLAGGED" . ??))))
+  
+                                        ; Allow setting single tags without the menu
+  (setq org-fast-tag-selection-single-key (quote expert))
+
+                                        ; For tag searches ignore tasks with scheduled and deadline dates
+  (setq org-agenda-tags-todo-honor-ignore-options t)
+  ;(setq org-agenda-span 'day)
+  (setq org-agenda-custom-commands
+        (quote (("N" "Notes" tags "NOTE"
+                 ((org-agenda-overriding-header "Notes")
+                  (org-tags-match-list-sublevels t)))
+                ("G" "Agenda"
+                 ((agenda "")
+                  (tags "REFILE"
+                        ((org-agenda-overriding-header "Tasks to Refile")
+                         (org-tags-match-list-sublevels nil)))
+                  (tags-todo "-CANCELLED/!NEXT"
+                           ((org-agenda-overriding-header "Project Next Tasks")
+                            (org-tags-match-list-sublevels t)
+                            (org-agenda-sorting-strategy
+                             '(todo-state-down effort-up category-keep)))))))))
 
   :bind (("C-c c" . org-capture)
          ("C-c a" . org-agenda))
