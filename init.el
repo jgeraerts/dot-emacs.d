@@ -126,13 +126,14 @@
    (package-refresh-contents)
    (init--install-packages)))
 
+(require 'sane-defaults)
+
 (load-theme 'zenburn t)
 
 (sml/setup)
 
 (require 'neotree)
 (require 'sublimity)
-(require 'sane-defaults)
 (require 'fill-column-indicator) ;; line indicating some edge column
 (require 'rainbow-delimiters)
 (require 'which-key)

@@ -89,6 +89,10 @@
 
                                         ; For tag searches ignore tasks with scheduled and deadline dates
   (setq org-agenda-tags-todo-honor-ignore-options t)
+  (setq org-clock-idle-time 10)
+  (setq org-clock-history-length 23)
+  ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
+  (setq org-clock-out-remove-zero-time-clocks t)
   ;(setq org-agenda-span 'day)
   (setq org-agenda-custom-commands
         (quote (("N" "Notes" tags "NOTE"
@@ -103,7 +107,13 @@
                            ((org-agenda-overriding-header "Project Next Tasks")
                             (org-tags-match-list-sublevels t)
                             (org-agenda-sorting-strategy
+                             '(todo-state-down effort-up category-keep))))
+                  (tags-todo "OVERHEAD"
+                           ((org-agenda-overriding-header "Overhead tasks")
+                            (org-tags-match-list-sublevels t)
+                            (org-agenda-sorting-strategy
                              '(todo-state-down effort-up category-keep)))))))))
+  :config (org-clock-persistence-insinuate)
 
   :bind (("C-c c" . org-capture)
          ("C-c a" . org-agenda))
@@ -111,6 +121,7 @@
 
 (use-package org-bullets
   :ensure t
+  :after org
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
@@ -122,6 +133,34 @@
   (org-journal-date-format "%A, %d %B %Y"))
 
 (require 'org-protocol)
+
+(use-package org-roam
+  :ensure t
+  :after org
+  :hook
+  (after-init . org-roam-mode)
+  :custom
+  (org-roam-directory "~/org/notes/")
+  :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-show-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))))
+
+(use-package bibtex-completion
+  :ensure t)
+
+(use-package helm-bibtex
+  :ensure t)
+
+(use-package org-ref
+  :ensure t
+  :after org)
+
+(use-package org-download
+  :ensure t
+  :after org)
 
 (provide 'setup-org)
 ;;; setup-org.el ends here
