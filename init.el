@@ -162,7 +162,9 @@
   :ensure t
   :defer t)
 
-
+(use-package nvm
+  :ensure t
+  :defer t)
 
 
 ;; Setup environment variables from the user's shell.

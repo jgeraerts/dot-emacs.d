@@ -8,41 +8,39 @@
 (use-package org
   :ensure org-plus-contrib
   :init
+
   (setq org-capture-templates
-              (quote (("t" "todo" entry (file "~//org/inbox.org")
+              (quote (("t" "todo" entry (file "~/org/inbox.org")
                        "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
-                      ("r" "respond" entry (file "~//org/inbox.org")
-                       "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
-                      ("n" "note" entry (file "~//org/inbox.org")
+                      ("n" "note" entry (file "~/org/inbox.org")
                        "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-                      ("j" "Journal" entry (file+datetree "~//org/diary.org")
-                       "* %?\n%U\n" :clock-in t :clock-resume t)
-                      ("w" "org-protocol" entry (file "~//org/inbox.org")
-                       "* TODO Review %c\n%U\n" :immediate-finish t)
-                      ("m" "Meeting" entry (file "~//org/inbox.org")
+                      ("w" "org-protocol" entry (file "~/org/inbox.org")
+                       "* TODO Review [[%:link][%:description]]\n  Captured on%U\n" :immediate-finish t)
+                      ("j" "next jira task" entry (file "~/org/inbox.org")
+                       "* NEXT [[%:link][%:description]]\n" :clock-in t :clock-resume t)
+                      ("m" "Meeting" entry (file "~/org/inbox.org")
                        "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
-                      ("p" "Phone call" entry (file "~//org/inbox.org")
+                      ("p" "Phone call" entry (file "~/org/inbox.org")
                        "* PHONE %? :PHONE:\n%U" :clock-in t :clock-resume t)
-                      ("h" "Habit" entry (file "~//org/inbox.org")
-                       "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n")
-                      ("l" "Link" entry (file+headline "~/org/links.org" "Links")
-                       "* %a %^g\n %?\n %T\n %i"))))
+                      ("h" "Habit" entry (file "~/org/inbox.org")
+                       "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
+
   (setq org-directory "~/org")
   (setq org-default-notes-file "~/org/inbox.org")
   (setq org-agenda-files (quote ("~/org")))
                                         ;Targets include this file and any file contributing to the agenda - up to 9 levels deep
   (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                    (org-agenda-files :maxlevel . 9))))
-  
+
                                         ; Use full outline paths for refile targets - we file directly with IDO
   (setq org-refile-use-outline-path t)
-  
+
                                         ; Targets complete directly with IDO
   (setq org-outline-path-complete-in-steps nil)
   (setq org-todo-keywords
         (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
-  
+
   (setq org-todo-keyword-faces
         (quote (("TODO" :foreground "red" :weight bold)
                 ("NEXT" :foreground "blue" :weight bold)
@@ -61,7 +59,7 @@
                 ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
                 ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
                 ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
-  
+
                                         ; Allow refile to create parent tasks with confirmation
   (setq org-refile-allow-creating-parent-nodes (quote confirm))
   (setq org-refile-targets (quote ((nil :maxlevel . 9)
@@ -83,7 +81,7 @@
                               ("NOTE" . ?n)
                               ("CANCELLED" . ?c)
                               ("FLAGGED" . ??))))
-  
+
                                         ; Allow setting single tags without the menu
   (setq org-fast-tag-selection-single-key (quote expert))
 
@@ -93,7 +91,7 @@
   (setq org-clock-history-length 23)
   ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
   (setq org-clock-out-remove-zero-time-clocks t)
-  ;(setq org-agenda-span 'day)
+  (setq org-agenda-span 'day)
   (setq org-agenda-custom-commands
         (quote (("N" "Notes" tags "NOTE"
                  ((org-agenda-overriding-header "Notes")
@@ -161,6 +159,9 @@
 (use-package org-download
   :ensure t
   :after org)
+
+
+(require 'org-roam-protocol)
 
 (provide 'setup-org)
 ;;; setup-org.el ends here

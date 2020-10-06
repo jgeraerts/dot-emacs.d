@@ -32,7 +32,7 @@
 
 (js2r-add-keybindings-with-prefix "C-c C-m")
 
-(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+;(add-hook 'js-mode-hook (lambda () (tern-mode t)))
 (add-hook 'js2-mode-hook #'js2-refactor-mode)
 (add-hook 'js2-mode-hook 'add-node-modules-path)
 

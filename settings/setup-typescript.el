@@ -7,8 +7,11 @@
   :pin "MELPA"
   :after (typescript-mode company flycheck)
   :hook ((typescript-mode . tide-setup)
+         (typescript-mode . add-node-modules-path)
          (typescript-mode . tide-hl-identifier-mode)
-         (before-save . tide-format-before-save)))
+         (typescript-mode . flycheck-mode)
+         ;(before-save . tide-format-before-save)
+         ))
 
 (use-package ng2-mode
   :ensure t)
