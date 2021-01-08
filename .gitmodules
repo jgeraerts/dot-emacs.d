@@ -7,3 +7,6 @@
 [submodule "site-lisp/sublimity"]
 	path = site-lisp/sublimity
 	url = https://github.com/zk-phi/sublimity
+[submodule "site-lisp/openhab"]
+	path = site-lisp/openhab
+	url = https://github.com/rayslava/openhab.el

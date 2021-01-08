@@ -22,6 +22,12 @@
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path site-lisp-dir)
 
+(defvar jog/default-font-size 120)
+(defvar jog/default-variable-font-size 120)
+
+;(set-face-attribute 'default nil :font "Victor Mono" :height jog/default-font-size)
+;(set-face-attribute 'fixed-pitch nil :font "Victor Mono" :height jog/default-font-size)
+
 ;; Are we on a mac?
 (setq is-mac (equal system-type 'darwin))
 
@@ -88,8 +94,6 @@
      ido-vertical-mode
      inflections
      js2-refactor
-     lsp-mode
-     lsp-ui
      magit
      markdown-mode
      multi-term
@@ -131,6 +135,7 @@
 (load-theme 'zenburn t)
 
 (sml/setup)
+(setq use-package-always-ensure t)
 
 (require 'neotree)
 (require 'sublimity)
@@ -163,6 +168,10 @@
   :defer t)
 
 (use-package nvm
+  :ensure t
+  :defer t)
+
+(use-package platformio-mode
   :ensure t
   :defer t)
 
@@ -238,8 +247,23 @@
 
 (require 'tramp)
 (setq tramp-default-proxies-alist (quote (("home\\.geraerts\\.local\\'" "\\`root\\'" "/plink:pi@%h:")
-                                     (".*trendminer\\.net" "root" "/ssh:developer@%h:")
-                                     )))
+                                          (".*trendminer\\.net" "root" "/ssh:developer@%h:"))))
+
+(use-package lsp-mode :commands lsp
+  :ensure t)
+(use-package lsp-ui :commands lsp-ui-mode
+  :ensure t)
+(use-package company-lsp :commands company-lsp
+  :ensure t)
+
+(use-package irony
+  :ensure t
+  :hook ((c-mode . irony-mode))
+  :commands (irony-mode))
+
+(use-package irony-eldoc
+  :ensure t
+  :commands (irony-eldoc))
 
 ;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
 (defun rename-file-and-buffer (new-name)
