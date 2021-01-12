@@ -3,15 +3,6 @@
 ;;;
 
 ;;; Code:
-;(package-initialize)
-(setq w32-get-true-file-attributes nil)
-
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-
-;; No splash screen please ... jeez
-(setq inhibit-startup-message t)
 
 (setq site-lisp-dir
       (expand-file-name "site-lisp" user-emacs-directory))
@@ -22,31 +13,46 @@
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path site-lisp-dir)
 
-(defvar jog/default-font-size 120)
-(defvar jog/default-variable-font-size 120)
-
-;(set-face-attribute 'default nil :font "Victor Mono" :height jog/default-font-size)
-;(set-face-attribute 'fixed-pitch nil :font "Victor Mono" :height jog/default-font-size)
-
-;; Are we on a mac?
-(setq is-mac (equal system-type 'darwin))
-
 ;; Add external projects to load path
 (dolist (project (directory-files site-lisp-dir t "\\w+"))
   (when (file-directory-p project)
     (add-to-list 'load-path project)))
 
+
+(require 'sane-defaults)
+;; Don't beep. Don't visible-bell (fails on el capitan). Just blink the modeline on errors.
+
+(setq visible-bell nil)
+(setq ring-bell-function (lambda ()
+                           (invert-face 'mode-line)
+                           (run-with-timer 0.05 nil 'invert-face 'mode-line)))
+
+(setq w32-get-true-file-attributes nil)
+(setq inhibit-startup-message t)
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+
+; set default directory and use temporary directory
+(setq default-directory "~/")
+
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+(setq auto-save-list-file-prefix temporary-file-directory)
+
+;; Are we on a mac?
+(setq is-mac (equal system-type 'darwin))
+
 ;; Write backup files to own directory
 (setq backup-directory-alist
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
-
+(setq tramp-backup-directory-alist backup-directory-alist)
 
 ;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
-
-(require 'appearance)
+;(require 'appearance)
 
 ;; Save point position between sessions
 (require 'saveplace)
@@ -98,9 +104,7 @@
      markdown-mode
      multi-term
      multiple-cursors
-     neotree
      paredit
-     projectile
      puppet-mode
      rainbow-delimiters
      react-snippets
@@ -116,13 +120,11 @@
      terraform-mode
      undo-tree
      use-package
-     which-key
      whitespace-cleanup-mode
      yaml-mode
      yasnippet
      yasnippet-snippets
-     zenburn-theme
-     )))
+     zenburn-theme)))
 
 (condition-case nil
     (init--install-packages)
@@ -130,14 +132,10 @@
    (package-refresh-contents)
    (init--install-packages)))
 
-(require 'sane-defaults)
-
 (load-theme 'zenburn t)
-
 (sml/setup)
 (setq use-package-always-ensure t)
 
-(require 'neotree)
 (require 'sublimity)
 (require 'fill-column-indicator) ;; line indicating some edge column
 (require 'rainbow-delimiters)
@@ -158,8 +156,15 @@
 (require 'restclient)
 (require 'smex)
 
+(use-package dash)
+
+(use-package diminish
+  :config
+  (diminish subword-mode))
+
 (use-package editorconfig
   :ensure t
+  :diminish editorconfig-mode
   :config
   (editorconfig-mode 1))
 
@@ -175,14 +180,36 @@
   :ensure t
   :defer t)
 
+(use-package unicode-fonts
+   :ensure t
+   :config
+    (unicode-fonts-setup))
+
+(use-package exec-path-from-shell
+  :ensure t
+  :defer t
+  :custom
+  (exec-path-from-shell-arguments '("-l")))
+
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode)
 
 ;; Setup environment variables from the user's shell.
 (when is-mac
-  (require-package 'exec-path-from-shell)
-  (exec-path-from-shell-initialize))
+  ;(setq mac-control-modifier 'meta)
+  ;(setq mac-command-modifier 'control)
+  (when (window-system)
+    (exec-path-from-shell-initialize)
+    (add-to-list 'default-frame-alist '(fullscreen . maximized))
+    (set-face-attribute 'default nil :font "Monaco-12")
+    (if (version< "27.0" emacs-version)
+        (set-fontset-font
+         "fontset-default" 'unicode "Apple Color Emoji" nil 'prepend)
+      (set-fontset-font
+       t 'symbol (font-spec :family "Apple Color Emoji") nil 'prepend))))
 
 (setq browse-kill-ring-quit-action 'save-and-restore)
-
 
 (eval-after-load 'ido '(require 'setup-ido))
 (eval-after-load 'js2-mode '(require 'setup-js2-mode))
@@ -197,19 +224,22 @@
          (not (eq major-mode 'dired-mode)))
         (fci-mode 1))))
 
-(require 'projectile)
-
-(with-eval-after-load "projectile"
+(use-package projectile
+  :ensure t
+  :diminish projectile-mode
+  :init
   (projectile-mode +1)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+  :bind (:map projectile-mode-map
+              ("s-p" . projectile-command-map)
+              ("C-c p" . projectile-command-map)))
+
 
 (helm-projectile-on)
 (global-fci-mode 1)
 (show-paren-mode)
-(which-key-mode)
+
 (which-key-setup-side-window-right)
 
-(global-set-key [f8] 'neotree-toggle)
 (global-set-key (kbd "C-x b") 'helm-mini)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
@@ -239,7 +269,7 @@
                                   indentation space-after-tab)
       whitespace-line-column 100)
 
-(eval-after-load "whitespace-cleanup-mode" '(diminish 'whitespace-cleanup-mode))
+;(eval-after-load "whitespace-cleanup-mode" '(diminish 'whitespace-cleanup-mode))
 
 (add-hook 'go-mode-hook (lambda ()
                           (set (make-local-variable 'company-backends) '(company-go))

@@ -8,7 +8,7 @@
 (use-package org
   :ensure org-plus-contrib
   :init
-
+  (add-hook 'org-mode-hook 'auto-revert-mode)
   (setq org-capture-templates
               (quote (("t" "todo" entry (file "~/org/inbox.org")
                        "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
@@ -134,6 +134,7 @@
 
 (use-package org-roam
   :ensure t
+  :diminish org-roam-mode
   :after org
   :hook
   (after-init . org-roam-mode)
@@ -149,17 +150,13 @@
 (use-package bibtex-completion
   :ensure t)
 
+
 (use-package helm-bibtex
   :ensure t)
-
-(use-package org-ref
-  :ensure t
-  :after org)
 
 (use-package org-download
   :ensure t
   :after org)
-
 
 (require 'org-roam-protocol)
 

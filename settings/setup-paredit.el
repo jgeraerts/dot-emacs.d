@@ -1,4 +1,5 @@
 (require 'paredit)
+(require 'diminish)
 (require 'dash)
 (require 's)
 
@@ -20,5 +21,7 @@
 (put 'paredit-forward-delete 'delete-selection 'supersede)
 (put 'paredit-backward-delete 'delete-selection 'supersede)
 (put 'paredit-newline 'delete-selection t)
+
+(diminish 'paredit-mode)
 
 (provide 'setup-paredit)
