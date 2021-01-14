@@ -68,8 +68,6 @@
      ag
      better-defaults
      browse-kill-ring
-     cider
-     cider-hydra
      company
      company-flow
      company-go
@@ -88,13 +86,6 @@
      flycheck-pos-tip
      go-mode
      graphviz-dot-mode
-     helm
-     helm-ag
-     helm-descbinds
-     helm-mt
-     helm-projectile
-     helm-cider
-     helm-cider-history
      hydra
      idle-highlight-mode
      ido-vertical-mode
@@ -143,7 +134,7 @@
 (require 'key-bindings)
 (require 'mode-mappings)
 (require 'smartparens-config)
-(require 'helm-config)
+;(require 'helm-config)
 (require 'setup-hippie)
 (require 'setup-paredit)
 (require 'setup-flycheck)
@@ -174,7 +165,7 @@
 
 (use-package nvm
   :ensure t
-  :defer t)
+  :defer t))
 
 (use-package platformio-mode
   :ensure t
@@ -194,6 +185,43 @@
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode)
+
+
+(use-package lsp-mode :commands lsp
+  :ensure t)
+(use-package lsp-ui :commands lsp-ui-mode
+  :ensure t)
+(use-package company-lsp :commands company-lsp
+  :ensure t)
+
+(use-package irony
+  :ensure t
+  :hook ((c-mode . irony-mode))
+  :commands (irony-mode))
+
+(use-package irony-eldoc
+  :ensure t
+  :commands (irony-eldoc))
+
+(use-package projectile
+  :ensure t
+  :diminish projectile-mode
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+              ("s-p" . projectile-command-map)
+              ("C-c p" . projectile-command-map)))
+
+(use-package helm
+  :bind (("C-x b" . 'helm-mini)
+         ("C-x C-f" .  'helm-find-files)))
+
+(use-package helm-projectile
+  :config (helm-projectile-on))
+
+(use-package helm-ag)
+(use-package helm-descbinds)
+(use-package helm-mt)
 
 ;; Setup environment variables from the user's shell.
 (when is-mac
@@ -224,24 +252,14 @@
          (not (eq major-mode 'dired-mode)))
         (fci-mode 1))))
 
-(use-package projectile
-  :ensure t
-  :diminish projectile-mode
-  :init
-  (projectile-mode +1)
-  :bind (:map projectile-mode-map
-              ("s-p" . projectile-command-map)
-              ("C-c p" . projectile-command-map)))
 
 
-(helm-projectile-on)
+
+
 (global-fci-mode 1)
 (show-paren-mode)
 
 (which-key-setup-side-window-right)
-
-(global-set-key (kbd "C-x b") 'helm-mini)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
 
 (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
 
@@ -278,23 +296,6 @@
 (require 'tramp)
 (setq tramp-default-proxies-alist (quote (("home\\.geraerts\\.local\\'" "\\`root\\'" "/plink:pi@%h:")
                                           (".*trendminer\\.net" "root" "/ssh:developer@%h:"))))
-
-(use-package lsp-mode :commands lsp
-  :ensure t)
-(use-package lsp-ui :commands lsp-ui-mode
-  :ensure t)
-(use-package company-lsp :commands company-lsp
-  :ensure t)
-
-(use-package irony
-  :ensure t
-  :hook ((c-mode . irony-mode))
-  :commands (irony-mode))
-
-(use-package irony-eldoc
-  :ensure t
-  :commands (irony-eldoc))
-
 ;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
 (defun rename-file-and-buffer (new-name)
   "Renames both current buffer and file it's visiting to NEW-NAME."

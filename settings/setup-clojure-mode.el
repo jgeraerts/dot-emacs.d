@@ -12,8 +12,18 @@
 (use-package cider
   :ensure t)
 
+(use-package cider-hydra
+  :pin MELPA
+  :ensure t)
+
 (use-package clj-refactor
   :ensure t)
+
+(use-package helm-cider
+  :ensure t)
+(use-package helm-cider-history
+  :ensure t)
+
 
 
 (defadvice clojure-test-run-tests (before save-first activate)
@@ -68,6 +78,7 @@
 
 (add-hook 'clojure-mode-hook 'my-clojure-mode-hook)
 (add-hook 'clojure-mode-hook #'paredit-mode)
+(add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 
 ;(eval-after-load 'flycheck '(add-to-list 'flycheck-checkers 'clojure-cider-eastwood))
 
