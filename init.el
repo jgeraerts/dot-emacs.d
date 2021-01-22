@@ -4,6 +4,14 @@
 
 ;;; Code:
 
+(defvar nvm-version "12.18.3")
+
+(defun load-if-exists (f)
+  (if (file-exists-p (expand-file-name f))
+      (load-file (expand-file-name f))))
+
+(load-if-exists "~/.secrets.el")
+
 (setq site-lisp-dir
       (expand-file-name "site-lisp" user-emacs-directory))
 
@@ -48,6 +56,8 @@
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
 (setq tramp-backup-directory-alist backup-directory-alist)
+; read process output
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
 
 ;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -64,7 +74,6 @@
 (defun init--install-packages ()
   (packages-install
    '(
-     add-node-modules-path
      ag
      better-defaults
      browse-kill-ring
@@ -91,10 +100,8 @@
      ido-vertical-mode
      inflections
      js2-refactor
-     magit
      markdown-mode
      multi-term
-     multiple-cursors
      paredit
      puppet-mode
      rainbow-delimiters
@@ -165,7 +172,8 @@
 
 (use-package nvm
   :ensure t
-  :defer t))
+  :config (nvm-use "12.18.3")
+  :defer t)
 
 (use-package platformio-mode
   :ensure t
@@ -187,11 +195,18 @@
   :diminish which-key-mode)
 
 
-(use-package lsp-mode :commands lsp
+(use-package lsp-mode
+  :pin MELPA
+  :hook ((lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp
   :ensure t)
-(use-package lsp-ui :commands lsp-ui-mode
+(use-package lsp-ui
+  :pin MELPA
+  :commands lsp-ui-mode
   :ensure t)
-(use-package company-lsp :commands company-lsp
+(use-package company-lsp
+  :pin MELPA
+  :commands company-lsp
   :ensure t)
 
 (use-package irony
@@ -223,6 +238,74 @@
 (use-package helm-descbinds)
 (use-package helm-mt)
 
+(use-package add-node-modules-path
+  :hook ((typescript-mode . add-node-modules-path)))
+
+(use-package magit
+  :ensure t)
+
+(use-package forge
+  :ensure t
+  :pin MELPA)
+
+(use-package smerge-mode
+  :config
+  (defhydra unpackaged/smerge-hydra
+    (:color pink :hint nil :post (sm))
+    "
+^Move^       ^Keep^               ^Diff^                 ^Other^
+^^-----------^^-------------------^^---------------------^^-------
+_n_ext       _b_ase               _<_: upper/base        _C_ombine
+_p_rev       _u_pper              _=_: upper/lower       _r_esolve
+^^           _l_ower              _>_: base/lower        _k_ill current
+^^           _a_ll                _R_efine
+^^           _RET_: current       _E_diff
+"
+    ("n" smerge-next)
+    ("p" smerge-prev)
+    ("b" smerge-keep-base)
+    ("u" smerge-keep-upper)
+    ("l" smerge-keep-lower)
+    ("a" smerge-keep-all)
+    ("RET" smerge-keep-current)
+    ("\C-m" smerge-keep-current)
+    ("<" smerge-diff-base-upper)
+    ("=" smerge-diff-upper-lower)
+    (">" smerge-diff-base-lower)
+    ("R" smerge-refine)
+    ("E" smerge-ediff)
+    ("C" smerge-combine-with-next)
+    ("r" smerge-resolve)
+    ("k" smerge-kill-current)
+    ("ZZ" (lambda ()
+            (interactive)
+            (save-buffer)
+            (bury-buffer))
+     "Save and bury buffer" :color blue)
+    ("q" nil "cancel" :color blue))
+  :hook (magit-diff-visit-file . (lambda ()
+                                   (when smerge-mode
+                                     (unpackaged/smerge-hydra/body)))))
+
+(use-package multiple-cursors
+  :config
+  (defhydra jog-multiple-cursors-hydra (:hint nil)
+  "
+     ^Up^            ^Down^        ^Miscellaneous^
+----------------------------------------------
+[_p_]   Next    [_n_]   Next    [_l_] Edit lines
+[_P_]   Skip    [_N_]   Skip    [_a_] Mark all
+[_M-p_] Unmark  [_M-n_] Unmark  [_q_] Quit"
+  ("l" mc/edit-lines :exit t)
+  ("a" mc/mark-all-like-this :exit t)
+  ("n" mc/mark-next-like-this)
+  ("N" mc/skip-to-next-like-this)
+  ("M-n" mc/unmark-next-like-this)
+  ("p" mc/mark-previous-like-this)
+  ("P" mc/skip-to-previous-like-this)
+  ("M-p" mc/unmark-previous-like-this)
+  ("q" nil)))
+
 ;; Setup environment variables from the user's shell.
 (when is-mac
   ;(setq mac-control-modifier 'meta)
@@ -236,6 +319,11 @@
          "fontset-default" 'unicode "Apple Color Emoji" nil 'prepend)
       (set-fontset-font
        t 'symbol (font-spec :family "Apple Color Emoji") nil 'prepend))))
+
+(when window-system
+  (setq frame-title-format '(buffer-file-name "%f" ("%b")))
+  (tooltip-mode -1)
+  (blink-cursor-mode -1))
 
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
@@ -251,10 +339,6 @@
          (not (string-match "^\*.*\*$" (buffer-name)))
          (not (eq major-mode 'dired-mode)))
         (fci-mode 1))))
-
-
-
-
 
 (global-fci-mode 1)
 (show-paren-mode)
