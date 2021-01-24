@@ -306,6 +306,14 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   ("M-p" mc/unmark-previous-like-this)
   ("q" nil)))
 
+(use-package elfeed
+  :ensure t
+  :bind (("C-x w" . 'elfeed))
+  :init
+  (setq elfeed-feeds (list gitlabl-feed-url
+                           '("reddit.com/r/netsec.rss" security)
+                           '("https://hnrss.org/frontpage" news))))
+
 ;; Setup environment variables from the user's shell.
 (when is-mac
   ;(setq mac-control-modifier 'meta)
