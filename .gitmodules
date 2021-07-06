@@ -7,3 +7,7 @@
 [submodule "site-lisp/openhab"]
 	path = site-lisp/openhab
 	url = https://github.com/rayslava/openhab.el
+[submodule "site-lisp/ox-hugo"]
+	path = site-lisp/ox-hugo
+	url = git@github.com:jgeraerts/ox-hugo.git
+	branch = feat/org-hugo-base-dir

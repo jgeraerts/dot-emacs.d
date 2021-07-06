@@ -209,14 +209,9 @@
   :commands company-lsp
   :ensure t)
 
-(use-package irony
-  :ensure t
-  :hook ((c-mode . irony-mode))
-  :commands (irony-mode))
-
-(use-package irony-eldoc
-  :ensure t
-  :commands (irony-eldoc))
+(use-package ccls
+  :hook ((c-mode c++-mode objc-mode cuda-mode) .
+         (lambda () (require 'ccls) (lsp))))
 
 (use-package projectile
   :ensure t
@@ -310,7 +305,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   :ensure t
   :bind (("C-x w" . 'elfeed))
   :init
-  (setq elfeed-feeds (list gitlabl-feed-url
+  (setq elfeed-feeds (list gitlab-feed-url
                            '("reddit.com/r/netsec.rss" security)
                            '("https://hnrss.org/frontpage" news))))
 
