@@ -113,7 +113,7 @@
                              '(todo-state-down effort-up category-keep)))))))))
 
   (setq org-ditaa-jar-path "/usr/local/Cellar/ditaa/0.11.0_1/libexec/ditaa-0.11.0-standalone.jar")
-  (setq org-plantuml-jar-path "/usr/local/Cellar/plantuml/1.2021.3/libexec/plantuml.jar")
+  (setq org-plantuml-jar-path "/usr/local/Cellar/plantuml/1.2022.0/libexec/plantuml.jar")
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((ditaa . t)
