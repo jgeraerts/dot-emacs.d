@@ -4,7 +4,7 @@
 
 ;;; Code:
 
-(defvar nvm-version "12.18.3")
+(defvar nvm-version "16.14.2")
 
 (defun load-if-exists (f)
   (if (file-exists-p (expand-file-name f))
@@ -171,9 +171,7 @@
   :defer t)
 
 (use-package nvm
-  :ensure t
-  :config (nvm-use "12.18.3")
-  :defer t)
+  :ensure t)
 
 (use-package platformio-mode
   :ensure t
