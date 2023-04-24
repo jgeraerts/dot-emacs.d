@@ -18,6 +18,20 @@
 (setq settings-dir
       (expand-file-name "settings" user-emacs-directory))
 
+;bootstrap straight.el
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path site-lisp-dir)
 
@@ -170,8 +184,7 @@
   :ensure t
   :defer t)
 
-(use-package nvm
-  :ensure t)
+(straight-use-package 'nvm)
 
 (use-package platformio-mode
   :ensure t
@@ -192,12 +205,12 @@
   :init (which-key-mode)
   :diminish which-key-mode)
 
-
 (use-package lsp-mode
   :pin MELPA
   :hook ((lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
   :ensure t)
+
 (use-package lsp-ui
   :pin MELPA
   :commands lsp-ui-mode
@@ -306,6 +319,10 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (setq elfeed-feeds (list gitlab-feed-url
                            '("reddit.com/r/netsec.rss" security)
                            '("https://hnrss.org/frontpage" news))))
+
+(use-package ob-d2
+  :straight (:type git :host github :repo "dmacvicar/ob-d2")
+  :defer t)
 
 ;; Setup environment variables from the user's shell.
 (when is-mac
