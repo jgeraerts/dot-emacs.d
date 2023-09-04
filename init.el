@@ -113,22 +113,15 @@
      idle-highlight-mode
      ido-vertical-mode
      inflections
-     js2-refactor
      markdown-mode
      multi-term
      paredit
-     puppet-mode
      rainbow-delimiters
-     react-snippets
      ripgrep
-     rjsx-mode
-     sbt-mode
-     scala-mode
      smart-mode-line
      smartparens
      smex
      smooth-scrolling
-     tern
      terraform-mode
      undo-tree
      use-package
@@ -215,6 +208,7 @@
   :pin MELPA
   :commands lsp-ui-mode
   :ensure t)
+
 (use-package company-lsp
   :pin MELPA
   :commands company-lsp
