@@ -250,10 +250,6 @@
 (use-package magit
   :ensure t)
 
-(use-package forge
-  :ensure t
-  :pin MELPA)
-
 (use-package smerge-mode
   :config
   (defhydra unpackaged/smerge-hydra
@@ -311,18 +307,6 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   ("P" mc/skip-to-previous-like-this)
   ("M-p" mc/unmark-previous-like-this)
   ("q" nil)))
-
-(use-package elfeed
-  :ensure t
-  :bind (("C-x w" . 'elfeed))
-  :init
-  (setq elfeed-feeds (list gitlab-feed-url
-                           '("reddit.com/r/netsec.rss" security)
-                           '("https://hnrss.org/frontpage" news))))
-
-(use-package ob-d2
-  :straight (:type git :host github :repo "dmacvicar/ob-d2")
-  :defer t)
 
 ;; Setup environment variables from the user's shell.
 (when is-mac

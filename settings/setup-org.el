@@ -166,18 +166,11 @@
   ;(set-company-backend! 'org-mode '(company-capf))
   )
 
-(use-package bibtex-completion
-  :ensure t)
-
-
-(use-package helm-bibtex
-  :ensure t)
-
 (use-package org-download
   :ensure t
   :after org)
 
-(require 'org-roam-protocol)
+;(require 'org-roam-protocol)
 
 ;; Org roam
 ;; These are specified so they can be dynamically configured
