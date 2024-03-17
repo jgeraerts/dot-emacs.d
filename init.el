@@ -214,6 +214,8 @@
   :ensure t)
 
 (use-package ccls
+  :pin MELPA
+  :ensure t
   :hook ((c-mode c++-mode objc-mode cuda-mode) .
          (lambda () (require 'ccls) (lsp))))
 
