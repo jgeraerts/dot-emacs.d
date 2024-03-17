@@ -157,12 +157,11 @@
 (require 'restclient)
 (require 'smex)
 
-(use-package cider
+(use-package dash
   :ensure t)
 
-(use-package dash)
-
 (use-package diminish
+  :ensure t
   :config
   (diminish subword-mode))
 

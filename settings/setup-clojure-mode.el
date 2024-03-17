@@ -10,6 +10,7 @@
            (yas-minor-mode 1)))
 
 (use-package cider
+  :pin MELPA
   :ensure t)
 
 (use-package cider-hydra
@@ -17,11 +18,14 @@
   :ensure t)
 
 (use-package clj-refactor
+  :pin MELPA
   :ensure t)
 
 (use-package helm-cider
+  :pin MELPA
   :ensure t)
 (use-package helm-cider-history
+  :pin MELPA
   :ensure t)
 
 
