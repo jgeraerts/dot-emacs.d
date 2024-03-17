@@ -158,6 +158,9 @@
 (require 'restclient)
 (require 'smex)
 
+(use-package cider
+  :ensure t)
+
 (use-package dash)
 
 (use-package diminish
