@@ -426,6 +426,8 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (when buffer-file-name
     (setq-local buffer-save-without-query t)))
 
+(add-hook 'rust-mode-hook 'lsp-deferred)
+
 (server-start)
 
 (provide 'init)
