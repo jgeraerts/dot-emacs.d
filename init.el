@@ -43,7 +43,6 @@
 
 (require 'sane-defaults)
 ;; Don't beep. Don't visible-bell (fails on el capitan). Just blink the modeline on errors.
-
 (setq visible-bell nil)
 (setq ring-bell-function (lambda ()
                            (invert-face 'mode-line)
@@ -54,6 +53,8 @@
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+
+(pixel-scroll-precision-mode)
 
 ; set default directory and use temporary directory
 (setq default-directory "~/")
@@ -143,7 +144,7 @@
 (sml/setup)
 (setq use-package-always-ensure t)
 
-(require 'sublimity)
+
 (require 'rainbow-delimiters)
 (require 'which-key)
 (require 'key-bindings)
@@ -329,7 +330,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 (eval-after-load 'ido '(require 'setup-ido))
 (eval-after-load 'js2-mode '(require 'setup-js2-mode))
 (eval-after-load 'smex '(smex-initialize))
-(sublimity-mode 1)
+
 
 (global-display-fill-column-indicator-mode)
 
