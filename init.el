@@ -119,7 +119,6 @@
      rainbow-delimiters
      ripgrep
      smart-mode-line
-     smartparens
      smex
      smooth-scrolling
      terraform-mode
@@ -146,7 +145,6 @@
 (require 'which-key)
 (require 'key-bindings)
 (require 'mode-mappings)
-(require 'smartparens-config)
 (require 'setup-hippie)
 (require 'setup-paredit)
 (require 'setup-flycheck)
@@ -302,6 +300,14 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   ("P" mc/skip-to-previous-like-this)
   ("M-p" mc/unmark-previous-like-this)
   ("q" nil)))
+
+(use-package smartparens
+  :pin "MELPA"
+  ;:ensure smartparens  ;; install the package
+  :hook (prog-mode text-mode markdown-mode) ;; add `smartparens-mode` to these hooks
+  :config
+  ;; load default config
+  (require 'smartparens-config))
 
 ;; Setup environment variables from the user's shell.
 (when is-mac
