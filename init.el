@@ -99,7 +99,6 @@
      dockerfile-mode
      edn
      expand-region
-     fill-column-indicator
      find-file-in-project
      flow-minor-mode
      flx-ido
@@ -142,13 +141,11 @@
 (setq use-package-always-ensure t)
 
 (require 'sublimity)
-(require 'fill-column-indicator) ;; line indicating some edge column
 (require 'rainbow-delimiters)
 (require 'which-key)
 (require 'key-bindings)
 (require 'mode-mappings)
 (require 'smartparens-config)
-;(require 'helm-config)
 (require 'setup-hippie)
 (require 'setup-paredit)
 (require 'setup-flycheck)
@@ -328,15 +325,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 (eval-after-load 'smex '(smex-initialize))
 (sublimity-mode 1)
 
-;https://www.emacswiki.org/emacs/FillColumnIndicator#toc11
-(define-globalized-minor-mode global-fci-mode fci-mode
-  (lambda ()
-    (if (and
-         (not (string-match "^\*.*\*$" (buffer-name)))
-         (not (eq major-mode 'dired-mode)))
-        (fci-mode 1))))
+(global-display-fill-column-indicator-mode)
 
-(global-fci-mode 1)
+
 (show-paren-mode)
 
 (which-key-setup-side-window-right)
