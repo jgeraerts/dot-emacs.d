@@ -24,7 +24,6 @@
 
 (add-hook 'js2-mode-hook (lambda () (flycheck-mode 1)))
 
-;(require 'company-flow)
 (require 'js2-mode)
 (require 'js2-refactor)
 (require 'rjsx-mode)
@@ -43,9 +42,6 @@
 
 (add-hook 'js-mode-hook #'smartparens-mode)
 (add-hook 'js-mode-hook 'sp-use-smartparens-bindings)
-
-
-;(add-hook 'js2-mode-hook 'flow-minor-enable-automatically)
 
 ;; enable rjsx mode when react is imported in a file
 

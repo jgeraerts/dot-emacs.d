@@ -96,7 +96,6 @@
      better-defaults
      browse-kill-ring
      company
-     company-flow
      company-go
      discover
      discover-my-major
@@ -104,10 +103,8 @@
      edn
      expand-region
      find-file-in-project
-     flow-minor-mode
      flx-ido
      flycheck
-     flycheck-flow
      flycheck-clojure
      flycheck-pos-tip
      go-mode
