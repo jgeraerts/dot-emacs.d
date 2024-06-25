@@ -405,7 +405,12 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
    "(require 'clojure.tools.namespace.repl)
     (clojure.tools.namespace.repl/refresh)"))
 
+(use-package rust-mode
+  :pin MELPA
+  :ensure)
+
 (use-package rustic
+  :pin MELPA
   :ensure
   :bind (:map rustic-mode-map
               ("M-j" . lsp-ui-imenu)
@@ -424,6 +429,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 
   ;; comment to disable rustfmt on save
   (setq rustic-format-on-save t)
+  (setq rust-mode-treesitter-derive t)
   (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
 
 (defun rk/rustic-mode-hook ()
