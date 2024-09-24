@@ -126,7 +126,6 @@
      smex
      smooth-scrolling
      terraform-mode
-     undo-tree
      use-package
      whitespace-cleanup-mode
      yaml-mode
@@ -160,6 +159,14 @@
 (require 'restclient)
 (require 'smex)
 
+(use-package undo-tree
+  :defer t
+  :diminish undo-tree-mode
+  :init (global-undo-tree-mode)
+  :custom
+  (undo-tree-visualizer-diff t)
+  (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+  (undo-tree-visualizer-timestamps t))
 
 (use-package editorconfig
   :ensure t
