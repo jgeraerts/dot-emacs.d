@@ -40,8 +40,6 @@
   (when (file-directory-p project)
     (add-to-list 'load-path project)))
 
-
-(require 'sane-defaults)
 ;; Don't beep. Don't visible-bell (fails on el capitan). Just blink the modeline on errors.
 (setq visible-bell nil)
 (setq ring-bell-function (lambda ()
@@ -78,14 +76,20 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
 
-
-(load (expand-file-name "~/quicklisp/slime-helper.el"))
-(setq inferior-lisp-program "sbcl")
-
 ;; Save point position between sessions
 (require 'saveplace)
 (setq-default save-place t)
 (setq save-place-file (expand-file-name ".places" user-emacs-directory))
+
+(use-package dash
+  :ensure t)
+
+
+(use-package diminish
+  :ensure t
+  :config
+  (diminish 'subword-mode))
+
 
 (require 'setup-package)
 
@@ -135,14 +139,13 @@
   (error
    (package-refresh-contents)
    (init--install-packages)))
-
+(require 'sane-defaults)
 (load-theme 'zenburn t)
 (sml/setup)
 (setq use-package-always-ensure t)
 
 
 (require 'rainbow-delimiters)
-(require 'which-key)
 (require 'key-bindings)
 (require 'mode-mappings)
 (require 'setup-hippie)
@@ -157,13 +160,6 @@
 (require 'restclient)
 (require 'smex)
 
-(use-package dash
-  :ensure t)
-
-(use-package diminish
-  :ensure t
-  :config
-  (diminish subword-mode))
 
 (use-package editorconfig
   :ensure t
@@ -189,31 +185,24 @@
 (use-package exec-path-from-shell
   :ensure t
   :defer t
-  :custom
-  (exec-path-from-shell-arguments '("-l")))
+  ;:custom
+  ;(exec-path-from-shell-arguments '("-l"))
+  )
 
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode)
 
 (use-package lsp-mode
-  :pin MELPA
   :hook ((lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
   :ensure t)
 
 (use-package lsp-ui
-  :pin MELPA
   :commands lsp-ui-mode
   :ensure t)
 
-(use-package company-lsp
-  :pin MELPA
-  :commands company-lsp
-  :ensure t)
-
 (use-package ccls
-  :pin MELPA
   :ensure t
   :hook ((c-mode c++-mode objc-mode cuda-mode) .
          (lambda () (require 'ccls) (lsp))))
@@ -235,6 +224,7 @@
   :config (helm-projectile-on))
 
 (use-package helm-ag)
+(use-package helm-rg)
 (use-package helm-descbinds)
 (use-package helm-mt)
 
@@ -368,8 +358,6 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 (setq whitespace-style '(trailing lines space-before-tab
                                   indentation space-after-tab)
       whitespace-line-column 100)
-
-;(eval-after-load "whitespace-cleanup-mode" '(diminish 'whitespace-cleanup-mode))
 
 (add-hook 'go-mode-hook #'lsp-deferred)
 

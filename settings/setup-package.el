@@ -13,7 +13,7 @@
       package-archive-priorities
       '(("MELPA Stable" . 10)
         ("GNU ELPA"     . 5)
-        ("MELPA"        . 0)))
+        ("MELPA"        . 20)))
 
 (package-initialize)
 
