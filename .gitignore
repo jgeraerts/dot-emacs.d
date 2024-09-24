@@ -20,3 +20,7 @@ custom.el
 /network-security.data
 /recentf
 ensime
+/.lsp-session-v1
+/straight/
+/transient/
+/var/
