@@ -401,11 +401,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
     (clojure.tools.namespace.repl/refresh)"))
 
 (use-package rust-mode
-  :pin MELPA
   :ensure)
 
 (use-package rustic
-  :pin MELPA
   :ensure
   :bind (:map rustic-mode-map
               ("M-j" . lsp-ui-imenu)
