@@ -6,7 +6,7 @@
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
 (use-package org
-  :ensure org-plus-contrib
+  :ensure t
   :init
   (add-hook 'org-mode-hook 'auto-revert-mode)
   (setq org-capture-templates
@@ -165,12 +165,6 @@
            :unnarrowed t)))
   ;(set-company-backend! 'org-mode '(company-capf))
   )
-
-(use-package org-download
-  :ensure t
-  :after org)
-
-;(require 'org-roam-protocol)
 
 ;; Org roam
 ;; These are specified so they can be dynamically configured
