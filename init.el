@@ -125,7 +125,6 @@
      smart-mode-line
      smex
      smooth-scrolling
-     terraform-mode
      use-package
      whitespace-cleanup-mode
      yaml-mode
@@ -142,7 +141,6 @@
 (load-theme 'zenburn t)
 (sml/setup)
 (setq use-package-always-ensure t)
-
 
 (require 'rainbow-delimiters)
 (require 'key-bindings)
