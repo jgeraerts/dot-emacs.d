@@ -139,39 +139,7 @@
   (org-journal-date-format "%A, %d %B %Y"))
 
 (require 'org-protocol)
-
-(use-package org-roam
-  :ensure t
-  :diminish org-roam-mode
-  :after org
-  :hook
-  (after-init . org-roam-mode)
-  :custom
-  (org-roam-directory "~/org/notes/")
-  :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n g" . org-roam-show-graph)
-               ("C-c n c" . org-roam-capture)
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert))))
-  :config
-  (setq org-roam-capture-templates
-        '(("d" "default" plain (function org-roam--capture-get-point)
-           "%?"
-           :file-name "${slug}"
-           :head "#+title: ${title}\n"
-           :immediate-finish t
-           :unnarrowed t)))
-  ;(set-company-backend! 'org-mode '(company-capf))
-  )
-
-;; Org roam
-;; These are specified so they can be dynamically configured
-;; by calling emacs in batch mode in a CI context
-(setq org-roam-notes-path "~/org/notes")
-(setq org-roam-publish-path "~/projects/umask.net")
-
+ 
 ;; Heavily modified based on https://github.com/novoid/title-capitalization.el/blob/master/title-capitalization.el
 (defun title-capitalization (str)
   "Convert str to title case"
