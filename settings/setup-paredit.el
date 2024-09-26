@@ -24,4 +24,7 @@
 
 (diminish 'paredit-mode)
 
+(define-key paredit-mode-map (kbd "RET") nil)
+(define-key paredit-mode-map (kbd "C-j") 'paredit-newline)
+
 (provide 'setup-paredit)

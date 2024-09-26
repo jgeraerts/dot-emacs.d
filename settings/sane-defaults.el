@@ -122,7 +122,7 @@
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
 ;; No electric indent
-;(setq electric-indent-mode nil)
+(setq electric-indent-mode nil)
 
 ;; Nic says eval-expression-print-level needs to be set to nil (turned off) so
 ;; that you can always see what's happening.
