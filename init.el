@@ -96,7 +96,6 @@
 (defun init--install-packages ()
   (packages-install
    '(
-     ag
      better-defaults
      browse-kill-ring
      company
@@ -189,17 +188,31 @@
 
 (use-package exec-path-from-shell
   :ensure t
-  :defer t
+  :defer f
   ;:custom
   ;(exec-path-from-shell-arguments '("-l"))
   )
+
+(when is-mac
+  ;(setq mac-control-modifier 'meta)
+  ;(setq mac-command-modifier 'control)
+  (when (window-system)
+    (exec-path-from-shell-initialize)
+    (add-to-list 'default-frame-alist '(fullscreen . maximized))
+    (set-face-attribute 'default nil :font "Monaco-12")
+    (if (version< "27.0" emacs-version)
+        (set-fontset-font
+         "fontset-default" 'unicode "Apple Color Emoji" nil 'prepend)
+      (set-fontset-font
+       t 'symbol (font-spec :family "Apple Color Emoji") nil 'prepend))))
+
 
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode)
 
 (use-package lsp-mode
-  :hook ((lsp-mode . lsp-enable-which-key-integration))
+  :hook ((lsp-mode . lsp-enable-which-key-integration) (c-mode . lsp))
   :commands lsp
   :ensure t)
 
@@ -207,11 +220,18 @@
   :commands lsp-ui-mode
   :ensure t)
 
-(use-package ccls
-  :ensure t
-  :hook ((c-mode c++-mode objc-mode cuda-mode) .
-         (lambda () (require 'ccls) (lsp))))
 
+;; (use-package ccls
+;;   :ensure t
+;;   :hook ((c-mode c++-mode objc-mode cuda-mode) .
+;;          (lambda () (require 'ccls) (lsp))))
+
+
+(use-package helm
+  :bind (("C-x b" . 'helm-mini)
+         ("C-x C-f" .  'helm-find-files)))
+
+;(require 'helm-grep)
 (use-package projectile
   :ensure t
   :diminish projectile-mode
@@ -221,17 +241,12 @@
               ("s-p" . projectile-command-map)
               ("C-c p" . projectile-command-map)))
 
-(use-package helm
-  :bind (("C-x b" . 'helm-mini)
-         ("C-x C-f" .  'helm-find-files)))
 
-(use-package helm-projectile
-  :config (helm-projectile-on))
+ (use-package helm-projectile
+   :config (helm-projectile-on))
 
-(use-package helm-ag)
-(use-package helm-rg)
+;(use-package helm-rg)
 (use-package helm-descbinds)
-(use-package helm-mt)
 
 (use-package add-node-modules-path
   :hook ((typescript-mode . add-node-modules-path)))
@@ -306,18 +321,6 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (require 'smartparens-config))
 
 ;; Setup environment variables from the user's shell.
-(when is-mac
-  ;(setq mac-control-modifier 'meta)
-  ;(setq mac-command-modifier 'control)
-  (when (window-system)
-    (exec-path-from-shell-initialize)
-    (add-to-list 'default-frame-alist '(fullscreen . maximized))
-    (set-face-attribute 'default nil :font "Monaco-12")
-    (if (version< "27.0" emacs-version)
-        (set-fontset-font
-         "fontset-default" 'unicode "Apple Color Emoji" nil 'prepend)
-      (set-fontset-font
-       t 'symbol (font-spec :family "Apple Color Emoji") nil 'prepend))))
 
 (when window-system
   (setq frame-title-format '(buffer-file-name "%f" ("%b")))
