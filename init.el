@@ -67,10 +67,12 @@
 (setq-default save-place t)
 (setq save-place-file (expand-file-name ".places" user-emacs-directory))
 
+;; dash: list/sequence manipulation library, used as a dependency by many packages
 (use-package dash
   :ensure t)
 
 
+;; diminish: hide or abbreviate minor-mode indicators in the mode line
 (use-package diminish
   :ensure t
   :config
@@ -79,36 +81,36 @@
 
 (require 'setup-package)
 
-(use-package better-defaults :ensure t :defer t)
-(use-package browse-kill-ring :ensure t :defer t)
-(use-package company :ensure t :defer t)
-(use-package company-go :ensure t :defer t)
-(use-package discover :ensure t :defer t)
-(use-package discover-my-major :ensure t :defer t)
-(use-package dockerfile-mode :ensure t :defer t)
-(use-package edn :ensure t :defer t)
-(use-package expand-region :ensure t :defer t)
-(use-package find-file-in-project :ensure t :defer t)
-(use-package flycheck :ensure t :defer t)
-(use-package flycheck-clojure :ensure t :defer t)
-(use-package flycheck-pos-tip :ensure t :defer t)
-(use-package go-mode :ensure t :defer t)
-(use-package graphviz-dot-mode :ensure t :defer t)
-(use-package hydra :ensure t :defer t)
-(use-package idle-highlight-mode :ensure t :defer t)
-(use-package inflections :ensure t :defer t)
-(use-package markdown-mode :ensure t :defer t)
-(use-package multi-term :ensure t :defer t)
-(use-package paredit :ensure t :defer t)
-(use-package rainbow-delimiters :ensure t :defer t)
-(use-package ripgrep :ensure t :defer t)
-(use-package smart-mode-line :ensure t :defer t)
-(use-package smooth-scrolling :ensure t :defer t)
-(use-package whitespace-cleanup-mode :ensure t :defer t)
-(use-package yaml-mode :ensure t :defer t)
-(use-package yasnippet :ensure t :defer t)
-(use-package yasnippet-snippets :ensure t :defer t)
-(use-package zenburn-theme :ensure t :defer t)
+(use-package better-defaults :ensure t :defer t) ;; a handful of saner built-in defaults (uniquify, no ido, etc.)
+(use-package browse-kill-ring :ensure t :defer t) ;; browse and select from the kill-ring
+(use-package company :ensure t :defer t) ;; auto-completion framework
+(use-package company-go :ensure t :defer t) ;; company backend for Go
+(use-package discover :ensure t :defer t) ;; discoverability popups for context-specific commands
+(use-package discover-my-major :ensure t :defer t) ;; list keybindings available in the current major mode
+(use-package dockerfile-mode :ensure t :defer t) ;; major mode for Dockerfiles
+(use-package edn :ensure t :defer t) ;; read/write EDN data (used by clj-refactor)
+(use-package expand-region :ensure t :defer t) ;; incrementally expand the selected region by syntax
+(use-package find-file-in-project :ensure t :defer t) ;; fuzzy-find files within a project
+(use-package flycheck :ensure t :defer t) ;; on-the-fly syntax checking
+(use-package flycheck-clojure :ensure t :defer t) ;; flycheck checker for Clojure (via cider)
+(use-package flycheck-pos-tip :ensure t :defer t) ;; show flycheck errors in a tooltip at point
+(use-package go-mode :ensure t :defer t) ;; major mode for Go
+(use-package graphviz-dot-mode :ensure t :defer t) ;; major mode for Graphviz .dot files
+(use-package hydra :ensure t :defer t) ;; define bindable chains of commands ("hydras")
+(use-package idle-highlight-mode :ensure t :defer t) ;; highlight other occurrences of the symbol at point when idle
+(use-package inflections :ensure t :defer t) ;; pluralize/singularize words (used by clj-refactor)
+(use-package markdown-mode :ensure t :defer t) ;; major mode for Markdown
+(use-package multi-term :ensure t :defer t) ;; manage multiple terminal buffers
+(use-package paredit :ensure t :defer t) ;; kept installed for reference; smartparens is used instead
+(use-package rainbow-delimiters :ensure t :defer t) ;; color matching parens/brackets by nesting depth
+(use-package ripgrep :ensure t :defer t) ;; run ripgrep searches from Emacs
+(use-package smart-mode-line :ensure t :defer t) ;; a cleaner, more compact mode line
+(use-package smooth-scrolling :ensure t :defer t) ;; keep the cursor away from the window edges when scrolling
+(use-package whitespace-cleanup-mode :ensure t :defer t) ;; only clean up whitespace on lines you actually touched
+(use-package yaml-mode :ensure t :defer t) ;; major mode for YAML
+(use-package yasnippet :ensure t :defer t) ;; snippet expansion
+(use-package yasnippet-snippets :ensure t :defer t) ;; a collection of ready-made snippets
+(use-package zenburn-theme :ensure t :defer t) ;; the color theme loaded below
 
 (require 'sane-defaults)
 (load-theme 'zenburn t)
@@ -127,6 +129,7 @@
 (require 'setup-org)
 (require 'browse-kill-ring)
 
+;; undo-tree: visualize undo history as a tree instead of a linear stack (C-x u)
 (use-package undo-tree
   :defer t
   :diminish undo-tree-mode
@@ -136,28 +139,35 @@
   (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
   (undo-tree-visualizer-timestamps t))
 
+;; editorconfig: honor .editorconfig files for per-project indentation/whitespace rules
 (use-package editorconfig
   :ensure t
   :diminish editorconfig-mode
   :config
   (editorconfig-mode 1))
 
+;; feature-mode: major mode for Cucumber/Gherkin .feature files
 (use-package feature-mode
   :ensure t
   :defer t)
 
+;; nvm: switch Node.js versions from within Emacs (not on MELPA, installed via :vc)
 (use-package nvm
   :vc (:url "https://github.com/rejeep/nvm.el" :rev :newest))
 
+;; platformio-mode: PlatformIO (embedded/Arduino) build integration
 (use-package platformio-mode
   :ensure t
   :defer t)
 
+;; unicode-fonts: better Unicode glyph coverage via font fallback
 (use-package unicode-fonts
    :ensure t
    :config
     (unicode-fonts-setup))
 
+;; exec-path-from-shell: import PATH/env vars from the user's shell
+;; (needed since a macOS GUI Emacs doesn't inherit the shell's environment)
 (use-package exec-path-from-shell
   :ensure t
   :defer f
@@ -178,22 +188,27 @@
       (set-fontset-font
        t 'symbol (font-spec :family "Apple Color Emoji") nil 'prepend))))
 
+;; envrc: direnv integration, applies a project's .envrc environment per-buffer
 (use-package envrc
   :hook (after-init . envrc-global-mode))
 
+;; which-key: show available keybindings after a prefix key
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode)
 
+;; lsp-mode: Language Server Protocol client
 (use-package lsp-mode
   :hook ((lsp-mode . lsp-enable-which-key-integration) (c-mode . lsp))
   :commands lsp
   :ensure t)
 
+;; lsp-ui: UI extras for lsp-mode (sideline diagnostics, peek, imenu)
 (use-package lsp-ui
   :commands lsp-ui-mode
   :ensure t)
 
+;; lsp-pyright: Python language server support (via basedpyright) for lsp-mode
 (use-package lsp-pyright
   :ensure t
   :custom (lsp-pyright-langserver-command "basedpyright") ;; or basedpyright
@@ -254,6 +269,7 @@
   :after (embark consult)
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
+;; projectile: project-aware navigation and commands (find file, grep, switch project, ...)
 (use-package projectile
   :ensure t
   :diminish projectile-mode
@@ -266,12 +282,15 @@
               ("s-p" . projectile-command-map)
               ("C-c p" . projectile-command-map)))
 
+;; add-node-modules-path: add a project's node_modules/.bin to exec-path
 (use-package add-node-modules-path
   :hook ((typescript-mode . add-node-modules-path)))
 
+;; magit: Git porcelain
 (use-package magit
   :ensure t)
 
+;; smerge-mode: resolve merge conflicts (a hydra is layered on top below)
 (use-package smerge-mode
   :config
   (defhydra unpackaged/smerge-hydra
@@ -311,6 +330,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
                                    (when smerge-mode
                                      (unpackaged/smerge-hydra/body)))))
 
+;; multiple-cursors: edit multiple points in a buffer simultaneously
 (use-package multiple-cursors
   :config
   (defhydra jog-multiple-cursors-hydra (:hint nil)
@@ -330,6 +350,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   ("M-p" mc/unmark-previous-like-this)
   ("q" nil)))
 
+;; smartparens: structured, balanced-parens editing (slurp/barf/wrap/splice/...)
 (use-package smartparens
   :pin "MELPA"
   ;:ensure smartparens  ;; install the package
@@ -418,9 +439,11 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
    "(require 'clojure.tools.namespace.repl)
     (clojure.tools.namespace.repl/refresh)"))
 
+;; rust-mode: major mode for Rust
 (use-package rust-mode
   :ensure)
 
+;; rustic: Rust development environment on top of rust-mode (rustfmt, cargo, lsp integration)
 (use-package rustic
   :ensure
   :bind (:map rustic-mode-map
