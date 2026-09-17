@@ -245,7 +245,16 @@
 (use-package consult
   :ensure t
   :bind (("C-x b" . consult-buffer)
-         ("C-c p g" . consult-ripgrep)))
+         ("C-c p g" . consult-ripgrep)
+         ("M-g e" . consult-error)
+         ("M-g g" . consult-goto-line)
+         ("M-g h" . consult-org-heading)
+         ("M-g i" . consult-imenu)
+         ("M-g k" . consult-global-mark)
+         ("M-g l" . consult-line)
+         ("M-g m" . consult-mark)
+         ("M-g o" . consult-outline)
+         ("M-g I" . consult-imenu-multi)))
 
 ;; embark: contextual actions on the thing at point or the minibuffer candidate
 ;; at point (C-. to act, C-; for the single most likely action, C-h B to see
@@ -285,6 +294,18 @@
 ;; magit: Git porcelain
 (use-package magit
   :ensure t)
+
+;; git-gutter: show added/modified/deleted lines in the fringe/margin,
+;; and jump between/stage/revert hunks
+(use-package git-gutter
+  :ensure t
+  :diminish git-gutter-mode
+  :init
+  (global-git-gutter-mode +1)
+  :bind (("C-c v p" . git-gutter:previous-hunk)
+         ("C-c v n" . git-gutter:next-hunk)
+         ("C-c v s" . git-gutter:stage-hunk)
+         ("C-c v r" . git-gutter:revert-hunk)))
 
 ;; smerge-mode: resolve merge conflicts (a hydra is layered on top below)
 (use-package smerge-mode
@@ -451,7 +472,6 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 (use-package rustic
   :ensure
   :bind (:map rustic-mode-map
-              ("M-j" . consult-imenu)
               ("C-c C-c l" . flycheck-list-errors)
               ("C-c C-c a" . eglot-code-actions)
               ("C-c C-c r" . eglot-rename)
