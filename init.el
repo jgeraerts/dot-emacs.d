@@ -236,6 +236,24 @@
   :bind (("C-x b" . consult-buffer)
          ("C-c p g" . consult-ripgrep)))
 
+;; embark: contextual actions on the thing at point or the minibuffer candidate
+;; at point (C-. to act, C-; for the single most likely action, C-h B to see
+;; what's available)
+(use-package embark
+  :ensure t
+  :bind (("C-." . embark-act)
+         ("C-;" . embark-dwim)
+         ("C-h B" . embark-bindings))
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command))
+
+;; embark-consult: makes embark's collect/export actions work with consult's
+;; commands (e.g. turn a consult-ripgrep session into an editable grep buffer)
+(use-package embark-consult
+  :ensure t
+  :after (embark consult)
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
+
 (use-package projectile
   :ensure t
   :diminish projectile-mode
