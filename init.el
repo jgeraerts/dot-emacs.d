@@ -135,7 +135,6 @@
 (require 'setup-typescript)
 (require 'setup-org)
 (require 'browse-kill-ring)
-(require 'restclient)
 
 (use-package undo-tree
   :defer t
