@@ -211,7 +211,10 @@
 ;; vertico: vertical completion UI for the minibuffer (replaces ido/helm's UI role)
 (use-package vertico
   :ensure t
-  :init (vertico-mode))
+  :init (vertico-mode)
+  :bind (:map vertico-map
+              ;; ido/helm-style "go up one directory" in find-file
+              ("C-l" . vertico-directory-up)))
 
 ;; orderless: completion style that matches space-separated terms in any order
 ;; (e.g. "set comp" matches "settings/setup-company.el")
