@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (require 'flycheck)
 (require 'flycheck-pos-tip)
 

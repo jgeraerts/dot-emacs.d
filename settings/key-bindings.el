@@ -1,4 +1,4 @@
-;;; keybindings --- setup keybindings
+;;; keybindings --- setup keybindings -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; no commentary
 ;;; Code:

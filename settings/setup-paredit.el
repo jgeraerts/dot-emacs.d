@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (require 'paredit)
 (require 'diminish)
 (require 'dash)

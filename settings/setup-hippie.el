@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (defvar he-search-loc-backward (make-marker))
 (defvar he-search-loc-forward (make-marker))
 

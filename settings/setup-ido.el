@@ -1,4 +1,4 @@
-;;; ido mode setup
+;;; ido mode setup -*- lexical-binding: t; -*-
 
 (require 'ido)
 

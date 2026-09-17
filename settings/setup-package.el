@@ -1,4 +1,4 @@
-;;; setup-package --- Setup package manager
+;;; setup-package --- Setup package manager -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;;
 

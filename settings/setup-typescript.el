@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (defvar nvm-version)
 
 (use-package typescript-mode

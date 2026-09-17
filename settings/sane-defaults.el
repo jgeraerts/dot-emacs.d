@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 (global-hl-line-mode 1) ; highlight line
 
 ; prevent creating lockfiles so that directory timestamps are not

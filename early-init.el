@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; Reduce GC frequency during startup
 (setq gc-cons-threshold (* 200 1024 1024))
 ;(setq package-enable-at-startup nil)  ; breaks with diminish
