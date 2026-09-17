@@ -206,6 +206,8 @@
       (set-fontset-font
        t 'symbol (font-spec :family "Apple Color Emoji") nil 'prepend))))
 
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
 
 (use-package which-key
   :init (which-key-mode)
@@ -219,6 +221,13 @@
 (use-package lsp-ui
   :commands lsp-ui-mode
   :ensure t)
+
+(use-package lsp-pyright
+  :ensure t
+  :custom (lsp-pyright-langserver-command "basedpyright") ;; or basedpyright
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))  ; or lsp-deferred
 
 
 ;; (use-package ccls
