@@ -208,13 +208,25 @@
   :commands lsp-ui-mode
   :ensure t)
 
+;; treesit-auto: automatically install tree-sitter grammars and remap
+;; major modes to their -ts- equivalents when available.
+;; python-mode and python-ts-mode are siblings under python-base-mode, not
+;; parent/child, so anything hooked to `python-mode' won't fire once remapped -
+;; hook `python-base-mode' instead to cover both.
+(use-package treesit-auto
+  :ensure t
+  :custom (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
 ;; lsp-pyright: Python language server support (via basedpyright) for lsp-mode
 (use-package lsp-pyright
   :ensure t
   :custom (lsp-pyright-langserver-command "basedpyright") ;; or basedpyright
-  :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp))))  ; or lsp-deferred
+  :hook (python-base-mode . (lambda ()
+                               (require 'lsp-pyright)
+                               (lsp))))  ; or lsp-deferred
 
 
 ;; (use-package ccls
