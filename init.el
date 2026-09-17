@@ -106,7 +106,6 @@
      edn
      expand-region
      find-file-in-project
-     flx-ido
      flycheck
      flycheck-clojure
      flycheck-pos-tip
@@ -114,7 +113,6 @@
      graphviz-dot-mode
      hydra
      idle-highlight-mode
-     ido-vertical-mode
      inflections
      markdown-mode
      multi-term
@@ -122,7 +120,6 @@
      rainbow-delimiters
      ripgrep
      smart-mode-line
-     smex
      smooth-scrolling
      use-package
      whitespace-cleanup-mode
@@ -153,7 +150,6 @@
 (require 'setup-org)
 (require 'browse-kill-ring)
 (require 'restclient)
-(require 'smex)
 
 (use-package undo-tree
   :defer t
@@ -235,26 +231,42 @@
 ;;          (lambda () (require 'ccls) (lsp))))
 
 
-(use-package helm
-  :bind (("C-x b" . 'helm-mini)
-         ("C-x C-f" .  'helm-find-files)))
+;; vertico: vertical completion UI for the minibuffer (replaces ido/helm's UI role)
+(use-package vertico
+  :ensure t
+  :init (vertico-mode))
 
-;(require 'helm-grep)
+;; orderless: completion style that matches space-separated terms in any order
+;; (e.g. "set comp" matches "settings/setup-company.el")
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+;; marginalia: annotations in the minibuffer (file sizes, docstrings, keybindings, ...)
+(use-package marginalia
+  :ensure t
+  :init (marginalia-mode))
+
+;; consult: enhanced versions of common commands (buffer switching, ripgrep/grep, ...)
+;; built on top of the standard minibuffer, so it renders through vertico automatically
+(use-package consult
+  :ensure t
+  :bind (("C-x b" . consult-buffer)
+         ("C-c p g" . consult-ripgrep)))
+
 (use-package projectile
   :ensure t
   :diminish projectile-mode
   :init
   (projectile-mode +1)
+  :custom
+  ;; use plain `completing-read', which vertico/orderless/marginalia enhance
+  (projectile-completion-system 'default)
   :bind (:map projectile-mode-map
               ("s-p" . projectile-command-map)
               ("C-c p" . projectile-command-map)))
-
-
- (use-package helm-projectile
-   :config (helm-projectile-on))
-
-;(use-package helm-rg)
-(use-package helm-descbinds)
 
 (use-package add-node-modules-path
   :hook ((typescript-mode . add-node-modules-path)))
@@ -346,9 +358,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
-(eval-after-load 'ido '(require 'setup-ido))
 (eval-after-load 'js2-mode '(require 'setup-js2-mode))
-(eval-after-load 'smex '(smex-initialize))
 
 
 (global-display-fill-column-indicator-mode)
@@ -361,14 +371,6 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
 
 (setq TeX-engine 'xetex)
-(setq ido-enable-prefix nil
-      ido-enable-flex-matching t
-      ido-auto-merge-work-directories-length nil
-      ido-create-new-buffer 'always
-      ido-use-filename-at-point 'guess
-      ido-use-virtual-buffers t
-      ido-handle-duplicate-virtual-buffers 2
-      ido-max-prospects 10)
 ;(setq linum-format "%4d ") ; Line numbers gutter should be four characters wide
 (setq echo-keystrokes 0.1
       use-dialog-box nil

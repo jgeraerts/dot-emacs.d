@@ -21,13 +21,6 @@
   :pin MELPA
   :ensure t)
 
-(use-package helm-cider
-  :pin MELPA
-  :ensure t)
-(use-package helm-cider-history
-  :pin MELPA
-  :ensure t)
-
 
 
 (defadvice clojure-test-run-tests (before save-first activate)
