@@ -81,7 +81,6 @@
 ;; Some expectations features
 
 (add-hook 'clojure-mode-hook 'my-clojure-mode-hook)
-(add-hook 'clojure-mode-hook #'paredit-mode)
 (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 
 ;(eval-after-load 'flycheck '(add-to-list 'flycheck-checkers 'clojure-cider-eastwood))

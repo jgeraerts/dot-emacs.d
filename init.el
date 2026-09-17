@@ -145,7 +145,6 @@
 (require 'key-bindings)
 (require 'mode-mappings)
 (require 'setup-hippie)
-(require 'setup-paredit)
 (require 'setup-flycheck)
 (require 'setup-company)
 (require 'setup-yasnippet)
@@ -324,10 +323,19 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 (use-package smartparens
   :pin "MELPA"
   ;:ensure smartparens  ;; install the package
-  :hook (prog-mode text-mode markdown-mode) ;; add `smartparens-mode` to these hooks
+  :hook (prog-mode text-mode markdown-mode cider-repl-mode) ;; add `smartparens-mode` to these hooks
+  :diminish smartparens-mode
   :config
   ;; load default config
-  (require 'smartparens-config))
+  (require 'smartparens-config)
+  ;; use paredit-style keybindings (slurp/barf/wrap/splice/etc.)
+  (sp-use-paredit-bindings)
+  (define-key smartparens-mode-map (kbd "C-j") 'sp-newline)
+  ;; enable smartparens in the minibuffer for `eval-expression', like paredit was
+  (defun conditionally-enable-smartparens-mode ()
+    (if (eq this-command 'eval-expression)
+        (smartparens-mode 1)))
+  (add-hook 'minibuffer-setup-hook 'conditionally-enable-smartparens-mode))
 
 ;; Setup environment variables from the user's shell.
 
