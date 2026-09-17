@@ -79,46 +79,37 @@
 
 (require 'setup-package)
 
-(defun init--install-packages ()
-  (packages-install
-   '(
-     better-defaults
-     browse-kill-ring
-     company
-     company-go
-     discover
-     discover-my-major
-     dockerfile-mode
-     edn
-     expand-region
-     find-file-in-project
-     flycheck
-     flycheck-clojure
-     flycheck-pos-tip
-     go-mode
-     graphviz-dot-mode
-     hydra
-     idle-highlight-mode
-     inflections
-     markdown-mode
-     multi-term
-     paredit
-     rainbow-delimiters
-     ripgrep
-     smart-mode-line
-     smooth-scrolling
-     use-package
-     whitespace-cleanup-mode
-     yaml-mode
-     yasnippet
-     yasnippet-snippets
-     zenburn-theme)))
+(use-package better-defaults :ensure t :defer t)
+(use-package browse-kill-ring :ensure t :defer t)
+(use-package company :ensure t :defer t)
+(use-package company-go :ensure t :defer t)
+(use-package discover :ensure t :defer t)
+(use-package discover-my-major :ensure t :defer t)
+(use-package dockerfile-mode :ensure t :defer t)
+(use-package edn :ensure t :defer t)
+(use-package expand-region :ensure t :defer t)
+(use-package find-file-in-project :ensure t :defer t)
+(use-package flycheck :ensure t :defer t)
+(use-package flycheck-clojure :ensure t :defer t)
+(use-package flycheck-pos-tip :ensure t :defer t)
+(use-package go-mode :ensure t :defer t)
+(use-package graphviz-dot-mode :ensure t :defer t)
+(use-package hydra :ensure t :defer t)
+(use-package idle-highlight-mode :ensure t :defer t)
+(use-package inflections :ensure t :defer t)
+(use-package markdown-mode :ensure t :defer t)
+(use-package multi-term :ensure t :defer t)
+(use-package paredit :ensure t :defer t)
+(use-package rainbow-delimiters :ensure t :defer t)
+(use-package ripgrep :ensure t :defer t)
+(use-package smart-mode-line :ensure t :defer t)
+(use-package smooth-scrolling :ensure t :defer t)
+(use-package whitespace-cleanup-mode :ensure t :defer t)
+(use-package yaml-mode :ensure t :defer t)
+(use-package yasnippet :ensure t :defer t)
+(use-package yasnippet-snippets :ensure t :defer t)
+(use-package zenburn-theme :ensure t :defer t)
 
-(condition-case nil
-    (init--install-packages)
-  (error
-   (package-refresh-contents)
-   (init--install-packages)))
 (require 'sane-defaults)
 (load-theme 'zenburn t)
 (sml/setup)
