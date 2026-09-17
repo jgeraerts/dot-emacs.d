@@ -197,17 +197,6 @@
   :init (which-key-mode)
   :diminish which-key-mode)
 
-;; lsp-mode: Language Server Protocol client
-(use-package lsp-mode
-  :hook ((lsp-mode . lsp-enable-which-key-integration) (c-mode . lsp))
-  :commands lsp
-  :ensure t)
-
-;; lsp-ui: UI extras for lsp-mode (sideline diagnostics, peek, imenu)
-(use-package lsp-ui
-  :commands lsp-ui-mode
-  :ensure t)
-
 ;; treesit-auto: automatically install tree-sitter grammars and remap
 ;; major modes to their -ts- equivalents when available.
 ;; python-mode and python-ts-mode are siblings under python-base-mode, not
@@ -220,19 +209,14 @@
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
-;; lsp-pyright: Python language server support (via basedpyright) for lsp-mode
-(use-package lsp-pyright
-  :ensure t
-  :custom (lsp-pyright-langserver-command "basedpyright") ;; or basedpyright
-  :hook (python-base-mode . (lambda ()
-                               (require 'lsp-pyright)
-                               (lsp))))  ; or lsp-deferred
-
-
-;; (use-package ccls
-;;   :ensure t
-;;   :hook ((c-mode c++-mode objc-mode cuda-mode) .
-;;          (lambda () (require 'ccls) (lsp))))
+;; eglot: built-in LSP client, used for Python (via basedpyright) and C.
+;; Go and Rust are set up in their own sections further down.
+(use-package eglot
+  :hook ((python-base-mode . eglot-ensure)
+         (c-mode . eglot-ensure))
+  :config
+  (add-to-list 'eglot-server-programs
+               '(python-base-mode . ("basedpyright-langserver" "--stdio"))))
 
 
 ;; vertico: vertical completion UI for the minibuffer (replaces ido/helm's UI role)
@@ -374,6 +358,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   ;; use paredit-style keybindings (slurp/barf/wrap/splice/etc.)
   (sp-use-paredit-bindings)
   (define-key smartparens-mode-map (kbd "C-j") 'sp-newline)
+  ;; paredit-style bindings steal M-? for `sp-convolute-sexp', shadowing the
+  ;; global `xref-find-references' binding used by eglot; give it back.
+  (define-key smartparens-mode-map (kbd "M-?") 'xref-find-references)
   ;; enable smartparens in the minibuffer for `eval-expression', like paredit was
   (defun conditionally-enable-smartparens-mode ()
     (if (eq this-command 'eval-expression)
@@ -417,14 +404,19 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
                                   indentation space-after-tab)
       whitespace-line-column 100)
 
-(add-hook 'go-mode-hook #'lsp-deferred)
+;; treesit-auto remaps `go-mode' to the built-in `go-ts-mode', but the two
+;; are sibling modes (not parent/child) so anything hooked to `go-mode' won't
+;; fire once remapped - hook both.
+(add-hook 'go-mode-hook #'eglot-ensure)
+(add-hook 'go-ts-mode-hook #'eglot-ensure)
 
-;; Set up before-save hooks to format buffer and add/delete imports.
+;; Set up before-save hooks to format buffer and organize imports.
 ;; Make sure you don't have other gofmt/goimports hooks enabled.
-(defun lsp-go-install-save-hooks ()
-  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+(defun eglot-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'eglot-format-buffer nil t)
+  (add-hook 'before-save-hook #'eglot-code-action-organize-imports nil t))
+(add-hook 'go-mode-hook #'eglot-go-install-save-hooks)
+(add-hook 'go-ts-mode-hook #'eglot-go-install-save-hooks)
 
 (require 'tramp)
 (setq tramp-default-proxies-alist (quote (("home\\.geraerts\\.local\\'" "\\`root\\'" "/plink:pi@%h:")
@@ -459,19 +451,14 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 (use-package rustic
   :ensure
   :bind (:map rustic-mode-map
-              ("M-j" . lsp-ui-imenu)
-              ("M-?" . lsp-find-references)
+              ("M-j" . consult-imenu)
               ("C-c C-c l" . flycheck-list-errors)
-              ("C-c C-c a" . lsp-execute-code-action)
-              ("C-c C-c r" . lsp-rename)
-              ("C-c C-c q" . lsp-workspace-restart)
-              ("C-c C-c Q" . lsp-workspace-shutdown)
-              ("C-c C-c s" . lsp-rust-analyzer-status))
+              ("C-c C-c a" . eglot-code-actions)
+              ("C-c C-c r" . eglot-rename)
+              ("C-c C-c q" . eglot-reconnect)
+              ("C-c C-c Q" . eglot-shutdown))
   :config
-  ;; uncomment for less flashiness
-  ;; (setq lsp-eldoc-hook nil)
-  ;; (setq lsp-enable-symbol-highlighting nil)
-  ;; (setq lsp-signature-auto-activate nil)
+  (setq rustic-lsp-client 'eglot)
 
   ;; comment to disable rustfmt on save
   (setq rustic-format-on-save t)
@@ -486,7 +473,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (when buffer-file-name
     (setq-local buffer-save-without-query t)))
 
-(add-hook 'rust-mode-hook 'lsp-deferred)
+(add-hook 'rust-mode-hook 'eglot-ensure)
 
 (server-start)
 
