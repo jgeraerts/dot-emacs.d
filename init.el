@@ -18,20 +18,6 @@
 (setq settings-dir
       (expand-file-name "settings" user-emacs-directory))
 
-;bootstrap straight.el
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path site-lisp-dir)
 
@@ -170,7 +156,8 @@
   :ensure t
   :defer t)
 
-(straight-use-package 'nvm)
+(use-package nvm
+  :vc (:url "https://github.com/rejeep/nvm.el" :rev :newest))
 
 (use-package platformio-mode
   :ensure t
