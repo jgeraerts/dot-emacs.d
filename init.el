@@ -83,8 +83,6 @@
 
 (use-package better-defaults :ensure t :defer t) ;; a handful of saner built-in defaults (uniquify, no ido, etc.)
 (use-package browse-kill-ring :ensure t :defer t) ;; browse and select from the kill-ring
-(use-package company :ensure t :defer t) ;; auto-completion framework
-(use-package company-go :ensure t :defer t) ;; company backend for Go
 (use-package discover :ensure t :defer t) ;; discoverability popups for context-specific commands
 (use-package discover-my-major :ensure t :defer t) ;; list keybindings available in the current major mode
 (use-package dockerfile-mode :ensure t :defer t) ;; major mode for Dockerfiles
@@ -122,7 +120,6 @@
 (require 'mode-mappings)
 (require 'setup-hippie)
 (require 'setup-flycheck)
-(require 'setup-company)
 (require 'setup-yasnippet)
 (require 'setup-python)
 (require 'setup-typescript)
@@ -218,6 +215,35 @@
   (add-to-list 'eglot-server-programs
                '(python-base-mode . ("basedpyright-langserver" "--stdio"))))
 
+
+;; corfu: in-buffer completion popup (replaces company), driven by
+;; completion-at-point-functions - pairs naturally with eglot, which
+;; contributes its own capf without needing a company backend bridge
+(use-package corfu
+  :ensure t
+  :init (global-corfu-mode)
+  :custom
+  (corfu-auto t)
+  (corfu-auto-delay 0.2)
+  (corfu-cycle t))
+
+;; corfu-popupinfo: show documentation for the selected candidate,
+;; the corfu equivalent of company's quickhelp popup
+(use-package corfu-popupinfo
+  :ensure nil
+  :after corfu
+  :init (corfu-popupinfo-mode))
+
+;; cape: extra completion-at-point-functions layered in front of corfu
+;; (dabbrev, file, keyword, ...), covering what company's bundled
+;; backends used to provide
+(use-package cape
+  :ensure t
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  :bind (("C-c y" . yas-expand)))
 
 ;; vertico: vertical completion UI for the minibuffer (replaces ido/helm's UI role)
 (use-package vertico
