@@ -111,6 +111,15 @@
 (use-package zenburn-theme :ensure t :defer t) ;; the color theme loaded below
 
 (require 'sane-defaults)
+
+;; Swap the buffer in the selected window with the one in the given direction,
+;; keeping window layout/sizes intact (pairs with windmove's Shift+direction
+;; navigation, set up in sane-defaults, by adding Control)
+(global-set-key (kbd "S-C-<up>") 'windmove-swap-states-up)
+(global-set-key (kbd "S-C-<down>") 'windmove-swap-states-down)
+(global-set-key (kbd "S-C-<left>") 'windmove-swap-states-left)
+(global-set-key (kbd "S-C-<right>") 'windmove-swap-states-right)
+
 (load-theme 'zenburn t)
 (sml/setup)
 (setq use-package-always-ensure t)
@@ -211,9 +220,29 @@
 (use-package eglot
   :hook ((python-base-mode . eglot-ensure)
          (c-mode . eglot-ensure))
+  ;; `M-.' (xref-find-definitions) resolves to the declared/static type, so on
+  ;; a Protocol-typed symbol it lands on the protocol itself rather than a
+  ;; concrete implementation. `eglot-find-implementation' issues the separate
+  ;; LSP "go to implementation" request to get there instead.
+  :bind (:map eglot-mode-map
+              ("C-c e i" . eglot-find-implementation)
+              ("C-c e d" . eglot-find-declaration)
+              ("C-c e t" . eglot-find-typeDefinition)
+              ("C-c e r" . eglot-rename)
+              ("C-c e ?" . xref-find-references)
+              ("C-c e a" . eglot-code-actions)
+              ("C-c e o" . eglot-code-action-organize-imports)
+              ("C-c e f" . eglot-format-buffer)
+              ("C-c e q" . eglot-reconnect)
+              ("C-c e Q" . eglot-shutdown))
   :config
   (add-to-list 'eglot-server-programs
                '(python-base-mode . ("basedpyright-langserver" "--stdio"))))
+
+;; ruff flags trailing whitespace - strip it automatically on save.
+(add-hook 'python-base-mode-hook
+          (lambda ()
+            (add-hook 'before-save-hook #'delete-trailing-whitespace nil t)))
 
 
 ;; corfu: in-buffer completion popup (replaces company), driven by
@@ -222,10 +251,11 @@
 (use-package corfu
   :ensure t
   :init (global-corfu-mode)
-  :custom
-  (corfu-auto t)
-  (corfu-auto-delay 0.2)
-  (corfu-cycle t))
+  ;:custom
+  ;(corfu-auto f)
+  ;(corfu-auto-delay 0.2)
+  ;(corfu-cycle f)
+  )
 
 ;; corfu-popupinfo: show documentation for the selected candidate,
 ;; the corfu equivalent of company's quickhelp popup
@@ -332,6 +362,32 @@
          ("C-c v n" . git-gutter:next-hunk)
          ("C-c v s" . git-gutter:stage-hunk)
          ("C-c v r" . git-gutter:revert-hunk)))
+
+;; compile: run shell commands (e.g. `pre-commit run --all-files') in a
+;; buffer that parses file:line:col output into jumpable links.
+;; Bound to `projectile-compile-project' rather than plain `compile' so it
+;; always runs from the project root, regardless of which buffer is current.
+(use-package compile
+  :ensure nil
+  :custom
+  (compilation-scroll-output 'first-error)
+  (compilation-skip-threshold 2)
+  (compilation-always-kill t)
+  :bind ("C-c c" . projectile-compile-project)
+  :config
+  ;; ruff prints the location on its own line, e.g.:
+  ;;   --> src/foo/bar.py:88:32
+  ;; rather than a leading "file:line:col:", so the default `gnu' regexp
+  ;; misses it - add a matcher for ruff's rustc-style "--> file:line:col".
+  (add-to-list 'compilation-error-regexp-alist 'ruff)
+  (add-to-list 'compilation-error-regexp-alist-alist
+               '(ruff "^\\s-*--> \\(.*\\):\\([0-9]+\\):\\([0-9]+\\)$" 1 2 3)))
+
+;; ansi-color: render ANSI color codes in the compilation buffer instead of
+;; showing raw escape sequences (pre-commit colors its pass/fail output)
+(use-package ansi-color
+  :ensure nil
+  :hook (compilation-filter . ansi-color-compilation-filter))
 
 ;; smerge-mode: resolve merge conflicts (a hydra is layered on top below)
 (use-package smerge-mode
